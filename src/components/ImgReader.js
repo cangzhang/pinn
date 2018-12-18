@@ -35,26 +35,24 @@ export default class ImageReader extends React.Component {
 
     return (
       <div className='image-reader'>
-        <input
-          type='file'
-          accept='image/*'
-          multiple='multiple'
-          className='file'
-          ref={this.createInputRef}
-          onChange={this.handleImageChosen}
-        />
-
         <div className="file is-boxed">
           <label className="file-label">
-            <input className="file-input" type="file"/>
+            <input
+              type='file'
+              accept='image/*'
+              multiple='multiple'
+              className='file-input'
+              ref={this.createInputRef}
+              onChange={this.handleImageChosen}
+            />
             <span className="file-cta">
-      <span className="file-icon">
-        <i className="ion ion-md-cloud-upload"/>
-      </span>
-      <span className="file-label">
-        Choose a file…
-      </span>
-    </span>
+              <span className="file-icon">
+                <i className="ion ion-md-cloud-upload"/>
+              </span>
+              <span className="file-label">
+                Choose a file…
+              </span>
+            </span>
           </label>
         </div>
 

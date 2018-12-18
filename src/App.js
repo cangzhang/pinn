@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import 'bulma/css/bulma.css'
-import 'ionicons/icons'
 
 import ImgReader from './components/ImgReader'
 
