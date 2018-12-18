@@ -10,7 +10,6 @@ export default class ImageReader extends React.Component {
 
   handleImageChosen = ev => {
     const files = ev.target.files
-    // const data = URL.createObjectURL(files[0])
 
     this.setState({
       files
@@ -23,6 +22,10 @@ export default class ImageReader extends React.Component {
         previewUrls[idx] = reader.result
         this.setState({
           previewUrls
+        }, () => {
+          if (previewUrls.length === files.length) {
+            this.props.onImagesReady(previewUrls)
+          }
         })
       }
     })
@@ -31,8 +34,6 @@ export default class ImageReader extends React.Component {
   createInputRef = e => this.inputRef = e
 
   render() {
-    const { previewUrls } = this.state
-
     return (
       <div className='image-reader'>
         <div className="file is-boxed">
@@ -55,15 +56,7 @@ export default class ImageReader extends React.Component {
             </span>
           </label>
         </div>
-
-        {previewUrls.map((url, key) =>
-          <img
-            alt={''}
-            className={'image'}
-            key={key}
-            src={url}
-          />)}
-      </div>
+        </div>
     )
   }
 }
