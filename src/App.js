@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import ImageInput from './components/ImageInput'
@@ -21,8 +20,6 @@ class App extends Component {
 
     return (
       <div className="App">
-        <img src={logo} className="App-logo" alt="logo"/>
-
         <ImageInput
           onImagesReady={this.handleImages}
         />
