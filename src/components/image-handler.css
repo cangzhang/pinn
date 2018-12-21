@@ -11,10 +11,9 @@
     cursor: grab;
 }
 
-.select-handler.top {
-    bottom: 100px;
-}
-
-.select-handler.bottom {
-    bottom: 1px;
+.overlay-indicator {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    background-color: rgba(0, 221, 255, 0.3);
 }
