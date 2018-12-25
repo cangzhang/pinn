@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
 import './App.css';
+
+import React, { Component } from 'react';
 
 import ImageInput from './components/ImageInput'
 import ImageHandler from './components/ImageHandler'

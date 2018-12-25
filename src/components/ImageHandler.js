@@ -5,6 +5,7 @@ import React from 'react'
 export default class ImageHandler extends React.Component {
   topRef = null
   containerRef = null
+  imgHolder = null
 
   state = {
     topPos: 100,
@@ -12,6 +13,20 @@ export default class ImageHandler extends React.Component {
   }
 
   componentDidMount() {
+    let ctx = this.imgHolder.getContext('2d')
+
+    const image = new Image()
+    image.onload = () => {
+      this.imgHolder.height = 300
+      this.imgHolder.width = 300 * (image.width / image.height)
+      ctx.drawImage(image, 0, 0)
+      ctx.drawImage(
+        image,
+        0, 0, image.width, image.height,     // source rectangle
+        0, 0, this.imgHolder.width, this.imgHolder.height
+      );
+    }
+    image.src = this.props.imageSrc
   }
 
   handleDragStart = ev => {
@@ -35,7 +50,6 @@ export default class ImageHandler extends React.Component {
   }
 
   render() {
-    const { imageSrc } = this.props
     const { topPos, botPos } = this.state
 
     return (
@@ -46,9 +60,9 @@ export default class ImageHandler extends React.Component {
         }}
         ref={this.getRef('containerRef')}
       >
-        <img
-          alt=""
-          src={imageSrc}
+        <canvas
+          className="img-container"
+          ref={this.getRef('imgHolder')}
         />
 
         <div
