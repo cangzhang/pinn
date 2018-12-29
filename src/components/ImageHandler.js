@@ -2,6 +2,39 @@ import './image-handler.css'
 
 import React from 'react'
 
+const cropImage = (src, sy, sh, containerHeight) => {
+  let canvas
+  const img = new Image()
+
+  return new Promise((resolve, reject) => {
+    if (!canvas)
+      canvas = document.createElement('canvas')
+
+    const ctx = canvas.getContext('2d')
+
+    img.onload = function () {
+      const scaledH = (this.height / containerHeight) * sh
+      const scaledSy = (this.height / containerHeight) * sy
+
+      canvas.width = this.width
+      canvas.height = this.height
+      ctx.drawImage(
+        this,
+        0, scaledSy, this.width, scaledH,
+        0, 0, this.width, scaledH,
+      )
+
+      img.onerror = function () {
+        reject('Error: Unable to load image.')
+      }
+
+      const data = canvas.toDataURL()
+      resolve(data)
+    }
+    img.src = src
+  })
+}
+
 export default class ImageHandler extends React.Component {
   topRef = null
   containerRef = null
@@ -9,39 +42,37 @@ export default class ImageHandler extends React.Component {
 
   state = {
     topPos: 100,
-    botPos: 1,
+    botPos: 20,
   }
 
   componentDidMount() {
-    let ctx = this.imgHolder.getContext('2d')
-
-    const image = new Image()
-    image.onload = () => {
-      this.imgHolder.height = 300
-      this.imgHolder.width = 300 * (image.width / image.height)
-      ctx.drawImage(image, 0, 0)
-      ctx.drawImage(
-        image,
-        0, 0, image.width, image.height,     // source rectangle
-        0, 0, this.imgHolder.width, this.imgHolder.height
-      );
-    }
-    image.src = this.props.imageSrc
   }
 
   handleDragStart = ev => {
   }
 
-  handleDrop = (elName, varName) => ev => {
+
+  handleDrop = (elName, varName, isBot = true) => ev => {
     const { offsetTop, offsetHeight } = this.containerRef
     const barPosition = ev.pageY
-    let top = barPosition - offsetTop
-    console.log('drag end: ', top)
-    if (top < 0) {
-      top = 0
+    let pos = barPosition - offsetTop
+    console.log('drag end: ', pos)
+    if (pos < 0) {
+      pos = 0
     }
+    if (isBot) {
+      pos = offsetHeight - pos
+    }
+
     this.setState({
-      [varName]: offsetHeight - top
+      [varName]: pos
+    }, () => {
+      const { topPos, botPos } = this.state
+      const selectH = offsetHeight - topPos - botPos
+      cropImage(this.props.imageSrc, topPos, selectH, offsetHeight)
+        .then(data => {
+          console.log(data)
+        })
     })
   }
 
@@ -50,6 +81,7 @@ export default class ImageHandler extends React.Component {
   }
 
   render() {
+    const { imageSrc } = this.props
     const { topPos, botPos } = this.state
 
     return (
@@ -60,28 +92,30 @@ export default class ImageHandler extends React.Component {
         }}
         ref={this.getRef('containerRef')}
       >
-        <canvas
+        <img
+          alt={''}
           className="img-container"
           ref={this.getRef('imgHolder')}
+          src={imageSrc}
         />
 
         <div
           className="overlay-indicator"
           style={{
             top: 0,
-            height: `calc(100% - ${topPos}px)`,
+            height: `${topPos}px`,
           }}
         />
 
         <div
           className={'select-handler top'}
           style={{
-            bottom: `${topPos}px`
+            top: `${topPos}px`
           }}
           ref={this.getRef('topRef')}
           draggable={true}
           onDrag={this.handleDragStart}
-          onDragEnd={this.handleDrop('topRef', 'topPos')}
+          onDragEnd={this.handleDrop('topRef', 'topPos', false)}
         />
         <div
           className={'select-handler bottom'}
