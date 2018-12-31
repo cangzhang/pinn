@@ -70,12 +70,11 @@ export default class ImageHandler extends React.Component {
     const barPosition = ev.pageY
 
     let pos = barPosition - offsetTop
-    if (pos < 0) {
-      pos = 0
-    }
-
     if (!isTopOne) {
       pos = offsetHeight - pos
+    }
+    if (pos < 0) {
+      pos = 0
     }
 
     this.updateState(pos, isTopOne, () => {
@@ -110,7 +109,7 @@ export default class ImageHandler extends React.Component {
           alt={''}
           className="img-container"
           src={imageSrc}
-          ref={img => this.imgRef = img}
+          ref={this.getRef('imgRef')}
           onLoad={this.onImgLoad}
         />
 
