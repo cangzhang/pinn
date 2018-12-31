@@ -1,3 +1,5 @@
+import './image-input.css'
+
 import React from 'react'
 
 export default class ImageReader extends React.Component {
@@ -35,9 +37,9 @@ export default class ImageReader extends React.Component {
 
   render() {
     return (
-      <div className='image-reader'>
-        <div className="file is-boxed">
-          <label className="file-label">
+      <div className='image-input'>
+        <div className='file is-boxed'>
+          <label className='file-label'>
             <input
               type='file'
               accept='image/*'
@@ -46,11 +48,11 @@ export default class ImageReader extends React.Component {
               ref={this.createInputRef}
               onChange={this.handleImageChosen}
             />
-            <span className="file-cta">
-              <span className="file-icon">
-                <i className="ion ion-md-cloud-upload"/>
+            <span className='file-cta'>
+              <span className='file-icon'>
+                <i className='ion ion-md-cloud-upload'/>
               </span>
-              <span className="file-label">
+              <span className='file-label'>
                 Choose File(s)
               </span>
             </span>

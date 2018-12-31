@@ -55,27 +55,35 @@ class App extends Component {
         <div className='show-area' id='show-area'>
           <div className='file-list'>
             {previewUrls.length > 0
-            && previewUrls.map((url, idx) =>
-              <ImageHandler
-                key={`img-${idx}`}
-                imageIdx={idx}
-                imageSrc={url}
-                onRemoveImage={this.removeImg(idx)}
-                onUpdateCrop={this.updateCroppedImage(idx)}
-              />
+            && previewUrls.map((url, idx) => {
+                let extraOption = {}
+                if (!idx) {
+                  extraOption = {
+                    topPos: 1,
+                    botPos: 1
+                  }
+                }
+
+                return <ImageHandler
+                  key={`img-${idx}`}
+                  imageIdx={idx}
+                  imageSrc={url}
+                  onRemoveImage={this.removeImg(idx)}
+                  onUpdateCrop={this.updateCroppedImage(idx)}
+                  {...extraOption}
+                />
+              }
             )}
           </div>
 
           <div className='preview'>
-            {
-              cropped.map((imgSrc, idx) => (
-                <img
-                  alt=''
-                  key={`crop-${idx}`}
-                  src={imgSrc}
-                />
-              ))
-            }
+            {cropped.map((imgSrc, idx) =>
+              <img
+                alt=''
+                key={`crop-${idx}`}
+                src={imgSrc}
+              />
+            )}
           </div>
         </div>
       </div>

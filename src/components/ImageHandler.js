@@ -11,22 +11,27 @@ export default class ImageHandler extends React.Component {
   imgRef = null
 
   state = {
-    topPos: 100,
-    botPos: 20,
+    topPos: this.props.topPos || 100,
+    botPos: this.props.botPos || 20,
     containerHeight: 'unset',
     locked: false,
   }
 
-  componentDidMount() {
-  }
-
   onImgLoad = () => {
     const { naturalHeight, naturalWidth } = this.imgRef
-    const containerHeight = `${(naturalHeight / naturalWidth) * IMAGE_WIDTH}px`
+    const height = (naturalHeight / naturalWidth) * IMAGE_WIDTH
 
-    this.setState({
-      containerHeight
-    }, () => {
+    const shouldUpdatePos = !this.props.topPos
+    const nState = {
+      containerHeight: `${height}px`,
+    }
+
+    if (shouldUpdatePos) {
+      const { botPos } = this.state
+      nState.topPos = height - botPos - 100
+    }
+
+    this.setState({ ...nState }, () => {
       this.generateCropped()
     })
   }
