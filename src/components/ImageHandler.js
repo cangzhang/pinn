@@ -1,19 +1,31 @@
 import './image-handler.css'
 
 import { cropImage } from '../utils/utils'
+import {IMAGE_WIDTH, MIN_GAP} from "../utils/constants"
 import React from 'react'
 
 export default class ImageHandler extends React.Component {
   topRef = null
+  botRef = null
   containerRef = null
-  imgHolder = null
+  imgRef = null
 
   state = {
+    containerHeight: 'unset',
     topPos: 100,
     botPos: 20,
   }
 
   componentDidMount() {
+  }
+
+  onImgLoad = () => {
+    const { naturalHeight, naturalWidth } = this.imgRef
+    const containerHeight = `${(naturalHeight / naturalWidth) * IMAGE_WIDTH}px`
+
+    this.setState({
+      containerHeight
+    })
   }
 
   updateState = (_val, isTopOne = true, cb) => {
@@ -26,10 +38,10 @@ export default class ImageHandler extends React.Component {
       distance = offsetHeight - val - topPos
     }
 
-    if (distance < 20) {
-      val = offsetHeight - botPos - 20
+    if (distance < MIN_GAP) {
+      val = offsetHeight - botPos - MIN_GAP
       if (!isTopOne) {
-        val = offsetHeight - topPos - 20
+        val = offsetHeight - topPos - MIN_GAP
       }
     }
 
@@ -82,21 +94,24 @@ export default class ImageHandler extends React.Component {
 
   render() {
     const { imageSrc } = this.props
-    const { topPos, botPos } = this.state
+    const { topPos, botPos, containerHeight } = this.state
 
     return (
       <div
         className="image-handler-container"
         style={{
           position: 'relative',
+          width: `${IMAGE_WIDTH}px`,
+          height: containerHeight
         }}
         ref={this.getRef('containerRef')}
       >
         <img
           alt={''}
           className="img-container"
-          ref={this.getRef('imgHolder')}
           src={imageSrc}
+          ref={img => this.imgRef = img}
+          onLoad={this.onImgLoad}
         />
 
         <div

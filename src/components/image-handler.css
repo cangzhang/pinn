@@ -1,3 +1,7 @@
+.image-handler-container {
+    display: flex;
+}
+
 .select-handler {
     width: 100%;
     height: 6px;

@@ -51,7 +51,7 @@ export default class ImageReader extends React.Component {
                 <i className="ion ion-md-cloud-upload"/>
               </span>
               <span className="file-label">
-                Choose a file…
+                Choose File(s)
               </span>
             </span>
           </label>
