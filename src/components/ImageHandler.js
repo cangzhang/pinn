@@ -26,6 +26,8 @@ export default class ImageHandler extends React.Component {
 
     this.setState({
       containerHeight
+    }, () => {
+      this.generateCropped()
     })
   }
 
@@ -78,14 +80,18 @@ export default class ImageHandler extends React.Component {
       pos = 0
     }
 
-    this.updateState(pos, isTopOne, () => {
-      const { topPos, botPos } = this.state
-      const selectH = offsetHeight - topPos - botPos
-      cropImage(this.props.imageSrc, topPos, selectH, offsetHeight)
-        .then(data => {
-          console.log(data)
-        })
-    })
+    this.updateState(pos, isTopOne, this.generateCropped)
+  }
+
+  generateCropped = () => {
+    const { offsetHeight } = this.containerRef
+    const { topPos, botPos } = this.state
+    const selectH = offsetHeight - topPos - botPos
+
+    cropImage(this.props.imageSrc, topPos, selectH, offsetHeight)
+      .then(data => {
+        this.props.onUpdateCrop(data)
+      })
   }
 
   getRef = refName => el => {
@@ -122,7 +128,7 @@ export default class ImageHandler extends React.Component {
           </span>
           <span className='icon lock-img'>
             <i
-              className={`ion ${ locked ? 'ion-md-lock' : 'ion-md-unlock' }`}
+              className={`ion ${locked ? 'ion-md-lock' : 'ion-md-unlock'}`}
               onClick={this.toggleLock}
             />
           </span>

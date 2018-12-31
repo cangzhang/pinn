@@ -7,7 +7,8 @@ import ImageHandler from './components/ImageHandler'
 
 class App extends Component {
   state = {
-    previewUrls: []
+    previewUrls: [],
+    cropped: []
   }
 
   handleImages = urls => {
@@ -27,8 +28,19 @@ class App extends Component {
     })
   }
 
+  updateCroppedImage = idx => data => {
+    const { cropped } = this.state
+    this.setState({
+      cropped: [
+        ...cropped.slice(0, idx),
+        data,
+        ...cropped.slice(idx + 1)
+      ]
+    })
+  }
+
   render() {
-    const { previewUrls } = this.state
+    const { previewUrls, cropped } = this.state
 
     return (
       <div className='App'>
@@ -36,17 +48,30 @@ class App extends Component {
           onImagesReady={this.handleImages}
         />
 
-        {
-          previewUrls.length > 0
+        <div className="file-list">
+          {previewUrls.length > 0
           && previewUrls.map((url, idx) =>
             <ImageHandler
               key={`img-${idx}`}
               imageIdx={idx}
               imageSrc={url}
               onRemoveImage={this.removeImg(idx)}
+              onUpdateCrop={this.updateCroppedImage(idx)}
             />
-          )
-        }
+          )}
+        </div>
+
+        <div className="preview">
+          {
+            cropped.map((imgSrc, idx) => (
+              <img
+                alt=''
+                key={`crop-${idx}`}
+                src={imgSrc}
+              />
+            ))
+          }
+        </div>
       </div>
     );
   }

@@ -9,15 +9,16 @@ export const cropImage = (src, sy, sh, containerHeight) => {
     const ctx = canvas.getContext('2d')
 
     img.onload = function () {
-      const scaledH = (this.height / containerHeight) * sh
-      const scaledSy = (this.height / containerHeight) * sy
+      const realSy = (this.height / containerHeight) * sy
+      const realDh = (this.height / containerHeight) * sh
 
       canvas.width = this.width
-      canvas.height = this.height
+      canvas.height = realDh || this.height
+
       ctx.drawImage(
         this,
-        0, scaledSy, this.width, scaledH,
-        0, 0, this.width, scaledH,
+        0, realSy, this.width, realDh,
+        0, 0, this.width, realDh,
       )
 
       img.onerror = function () {
