@@ -52,29 +52,31 @@ class App extends Component {
           onImagesReady={this.handleImages}
         />
 
-        <div className="file-list">
-          {previewUrls.length > 0
-          && previewUrls.map((url, idx) =>
-            <ImageHandler
-              key={`img-${idx}`}
-              imageIdx={idx}
-              imageSrc={url}
-              onRemoveImage={this.removeImg(idx)}
-              onUpdateCrop={this.updateCroppedImage(idx)}
-            />
-          )}
-        </div>
-
-        <div className="preview">
-          {
-            cropped.map((imgSrc, idx) => (
-              <img
-                alt=''
-                key={`crop-${idx}`}
-                src={imgSrc}
+        <div className='show-area' id='show-area'>
+          <div className='file-list'>
+            {previewUrls.length > 0
+            && previewUrls.map((url, idx) =>
+              <ImageHandler
+                key={`img-${idx}`}
+                imageIdx={idx}
+                imageSrc={url}
+                onRemoveImage={this.removeImg(idx)}
+                onUpdateCrop={this.updateCroppedImage(idx)}
               />
-            ))
-          }
+            )}
+          </div>
+
+          <div className='preview'>
+            {
+              cropped.map((imgSrc, idx) => (
+                <img
+                  alt=''
+                  key={`crop-${idx}`}
+                  src={imgSrc}
+                />
+              ))
+            }
+          </div>
         </div>
       </div>
     );
