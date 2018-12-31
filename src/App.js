@@ -19,11 +19,15 @@ class App extends Component {
   }
 
   removeImg = idx => () => {
-    const { previewUrls } = this.state
+    const { previewUrls, cropped } = this.state
     this.setState({
       previewUrls: [
         ...previewUrls.slice(0, idx),
         ...previewUrls.slice(idx + 1)
+      ],
+      cropped: [
+        ...cropped.slice(0, idx),
+        ...cropped.slice(idx + 1)
       ]
     })
   }
