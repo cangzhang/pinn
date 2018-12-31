@@ -48,9 +48,21 @@ export default class ImageHandler extends React.Component {
   componentDidMount() {
   }
 
-  handleDragStart = ev => {
-  }
+  handleDragStart = (isTopOne = true) => ev => {
+    const { offsetTop, offsetHeight } = this.containerRef
+    const { pageY } = ev
 
+    let varName = 'topPos'
+    let pos = pageY - offsetTop
+    if (!isTopOne) {
+      varName = 'botPos'
+      pos = offsetHeight + offsetTop - pageY
+    }
+
+    this.setState({
+      [varName]: pos
+    })
+  }
 
   handleDrop = (elName, varName, isBot = true) => ev => {
     const { offsetTop, offsetHeight } = this.containerRef
@@ -114,9 +126,10 @@ export default class ImageHandler extends React.Component {
           }}
           ref={this.getRef('topRef')}
           draggable={true}
-          onDrag={this.handleDragStart}
+          onDrag={this.handleDragStart()}
           onDragEnd={this.handleDrop('topRef', 'topPos', false)}
         />
+
         <div
           className={'select-handler bottom'}
           style={{
@@ -124,7 +137,7 @@ export default class ImageHandler extends React.Component {
           }}
           ref={this.getRef('botRef')}
           draggable={true}
-          onDrag={this.handleDragStart}
+          onDrag={this.handleDragStart(false)}
           onDragEnd={this.handleDrop('botRef', 'botPos')}
         />
 
