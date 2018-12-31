@@ -31,7 +31,7 @@ class App extends Component {
     const { previewUrls } = this.state
 
     return (
-      <div className="App">
+      <div className='App'>
         <ImageInput
           onImagesReady={this.handleImages}
         />

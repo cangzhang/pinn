@@ -11,9 +11,10 @@ export default class ImageHandler extends React.Component {
   imgRef = null
 
   state = {
-    containerHeight: 'unset',
     topPos: 100,
     botPos: 20,
+    containerHeight: 'unset',
+    locked: false,
   }
 
   componentDidMount() {
@@ -91,13 +92,20 @@ export default class ImageHandler extends React.Component {
     this[refName] = el
   }
 
+  toggleLock = () => {
+    const { locked } = this.state
+    this.setState({
+      locked: !locked
+    })
+  }
+
   render() {
     const { imageSrc } = this.props
-    const { topPos, botPos, containerHeight } = this.state
+    const { topPos, botPos, containerHeight, locked } = this.state
 
     return (
       <div
-        className="image-handler-container"
+        className='image-handler-container'
         style={{
           position: 'relative',
           width: `${IMAGE_WIDTH}px`,
@@ -105,26 +113,31 @@ export default class ImageHandler extends React.Component {
         }}
         ref={this.getRef('containerRef')}
       >
-        <div className="ctl-group">
-          <span className="icon">
+        <div className='ctl-group'>
+          <span className='icon remove-img'>
             <i
               className='ion ion-md-close'
               onClick={this.props.onRemoveImage}
             />
-            {/*<a href="" className="delete" />*/}
+          </span>
+          <span className='icon lock-img'>
+            <i
+              className={`ion ${ locked ? 'ion-md-lock' : 'ion-md-unlock' }`}
+              onClick={this.toggleLock}
+            />
           </span>
         </div>
 
         <img
           alt={''}
-          className="img-container"
+          className='img-container'
           src={imageSrc}
           ref={this.getRef('imgRef')}
           onLoad={this.onImgLoad}
         />
 
         <div
-          className="overlay-indicator"
+          className='overlay-indicator'
           style={{
             top: 0,
             height: `${topPos}px`,
@@ -154,7 +167,7 @@ export default class ImageHandler extends React.Component {
         />
 
         <div
-          className="overlay-indicator"
+          className='overlay-indicator'
           style={{
             bottom: 0,
             height: `${botPos}px`,

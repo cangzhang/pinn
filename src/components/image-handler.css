@@ -4,10 +4,12 @@
 
 .image-handler-container .ctl-group {
     position: absolute;
+    width: 3ex;
+    height: 50%;
     right: -3ex;
-    top: 1ex;
-    visibility: hidden;
+    top: 0;
     cursor: pointer;
+    visibility: hidden;
 }
 
 .image-handler-container:hover .ctl-group {
