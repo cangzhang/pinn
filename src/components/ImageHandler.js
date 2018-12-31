@@ -1,7 +1,7 @@
 import './image-handler.css'
 
 import { cropImage } from '../utils/utils'
-import {IMAGE_WIDTH, MIN_GAP} from "../utils/constants"
+import { IMAGE_WIDTH, MIN_GAP } from '../utils/constants'
 import React from 'react'
 
 export default class ImageHandler extends React.Component {
@@ -33,12 +33,12 @@ export default class ImageHandler extends React.Component {
     const { topPos, botPos } = this.state
 
     let val = _val
-    let distance = offsetHeight - botPos - val
+    let gap = offsetHeight - botPos - val
     if (!isTopOne) {
-      distance = offsetHeight - val - topPos
+      gap = offsetHeight - val - topPos
     }
 
-    if (distance < MIN_GAP) {
+    if (gap < MIN_GAP) {
       val = offsetHeight - botPos - MIN_GAP
       if (!isTopOne) {
         val = offsetHeight - topPos - MIN_GAP
