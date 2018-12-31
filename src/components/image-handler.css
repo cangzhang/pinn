@@ -2,6 +2,18 @@
     display: flex;
 }
 
+.image-handler-container .ctl-group {
+    position: absolute;
+    right: -3ex;
+    top: 1ex;
+    visibility: hidden;
+    cursor: pointer;
+}
+
+.image-handler-container:hover .ctl-group {
+    visibility: visible;
+}
+
 .select-handler {
     width: 100%;
     height: 6px;

@@ -10,9 +10,20 @@ class App extends Component {
     previewUrls: []
   }
 
-  handleImages = previewUrls => {
+  handleImages = urls => {
+    const { previewUrls } = this.state
     this.setState({
-      previewUrls
+      previewUrls: previewUrls.concat(urls)
+    })
+  }
+
+  removeImg = idx => () => {
+    const { previewUrls } = this.state
+    this.setState({
+      previewUrls: [
+        ...previewUrls.slice(0, idx),
+        ...previewUrls.slice(idx + 1)
+      ]
     })
   }
 
@@ -32,6 +43,7 @@ class App extends Component {
               key={`img-${idx}`}
               imageIdx={idx}
               imageSrc={url}
+              onRemoveImage={this.removeImg(idx)}
             />
           )
         }

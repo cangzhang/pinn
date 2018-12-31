@@ -105,6 +105,16 @@ export default class ImageHandler extends React.Component {
         }}
         ref={this.getRef('containerRef')}
       >
+        <div className="ctl-group">
+          <span className="icon">
+            <i
+              className='ion ion-md-close'
+              onClick={this.props.onRemoveImage}
+            />
+            {/*<a href="" className="delete" />*/}
+          </span>
+        </div>
+
         <img
           alt={''}
           className="img-container"
