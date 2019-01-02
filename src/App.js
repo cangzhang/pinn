@@ -43,6 +43,10 @@ class App extends Component {
     })
   }
 
+  generateImg = () => {
+    const { cropped } = this.state
+  }
+
   render() {
     const { previewUrls, cropped } = this.state
 
@@ -51,6 +55,14 @@ class App extends Component {
         <ImageInput
           onImagesReady={this.handleImages}
         />
+
+        <a
+          href='#'
+          className='button is-dark'
+          onClick={this.generateImg}
+        >
+          Pinn!
+        </a>
 
         <div className='show-area' id='show-area'>
           <div className='file-list'>
