@@ -5,6 +5,8 @@ import React, { Component } from 'react';
 import ImageInput from './components/ImageInput'
 import ImageHandler from './components/ImageHandler'
 
+import { mergeImages } from "./utils/utils"
+
 class App extends Component {
   state = {
     previewUrls: [],
@@ -45,6 +47,10 @@ class App extends Component {
 
   generateImg = () => {
     const { cropped } = this.state
+    mergeImages(cropped)
+      .then(data => {
+        console.log(data)
+      })
   }
 
   render() {
@@ -98,6 +104,8 @@ class App extends Component {
             )}
           </div>
         </div>
+
+        {/*<canvas id={'canvas'} />*/}
       </div>
     );
   }
