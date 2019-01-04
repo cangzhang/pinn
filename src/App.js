@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import ImageInput from './components/ImageInput'
 import ImageHandler from './components/ImageHandler'
 
-import { mergeImages } from "./utils/utils"
+import { mergeImages, downloadImage } from "./utils/utils"
 
 class App extends Component {
   state = {
@@ -45,11 +45,12 @@ class App extends Component {
     })
   }
 
-  generateImg = () => {
+  generateImg = (ev) => {
+    ev.preventDefault()
     const { cropped } = this.state
     mergeImages(cropped)
       .then(data => {
-        console.log(data)
+        downloadImage(data)
       })
   }
 
@@ -63,7 +64,7 @@ class App extends Component {
         />
 
         <a
-          href='#'
+          href='#pinn'
           className='button is-dark'
           onClick={this.generateImg}
         >

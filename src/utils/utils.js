@@ -39,30 +39,23 @@ const loadImgFromUrl = (url, shouldInitSize, canvas, data) => {
     img.onload = function () {
       let oldH = canvas.height
       if (shouldInitSize) {
-        oldH = this.height
         canvas.width = this.width
         canvas.height = this.height
+        oldH = 0
       } else {
         canvas.height = oldH + this.height
       }
-
-      // const ctx = canvas.getContext('2d')
-      // ctx.drawImage(
-      //   this,
-      //   0, 0, this.width, this.height,
-      //   0, oldH, canvas.width, this.height,
-      // )
 
       const obj = {
         src: this,
         sx: 0, sy: 0, sw: this.width, sh: this.height,
         dx: 0, dy: oldH, dw: canvas.width, dh: this.height,
       }
-
-      img.onerror = function () {
-        reject('Error: Unable to load image.')
-      }
       resolve([canvas, data.concat(obj)])
+    }
+
+    img.onerror = function () {
+      reject('Error: Unable to load image.')
     }
 
     img.src = url
@@ -70,7 +63,6 @@ const loadImgFromUrl = (url, shouldInitSize, canvas, data) => {
 }
 
 export const mergeImages = srcUrls => {
-  // const canvas = document.querySelector('canvas#canvas')
   const canvas = document.createElement('canvas')
   const result = []
 
@@ -79,9 +71,9 @@ export const mergeImages = srcUrls => {
       (promise, url, idx) => promise.then(([c, data]) => loadImgFromUrl(url, !idx, c, data)),
       Promise.resolve([canvas, result])
     )
-    .then(([, res]) => {
-      const ctx = canvas.getContext('2d')
-      res.map(obj => {
+    .then(([c, res]) => {
+      const ctx = c.getContext('2d')
+      res.forEach(obj => {
         const { src, sx, sy, sw, sh, dx, dy, dw, dh } = obj
         ctx.drawImage(
           src,
@@ -89,7 +81,18 @@ export const mergeImages = srcUrls => {
           dx, dy, dw, dh,
         )
       })
-      const d = canvas.toDataURL()
+      const d = c.toDataURL()
       return d;
     })
 }
+
+export const downloadImage = dataUrl => {
+  const link = document.createElement('a')
+  link.href = dataUrl
+  link.style = `display: none`;
+  link.download = `${new Date()}.png`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
