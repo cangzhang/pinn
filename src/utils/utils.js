@@ -15,18 +15,20 @@ export const cropImage = (src, sy, sh, containerHeight) => {
       canvas.width = this.width
       canvas.height = realDh || this.height
 
-      ctx.drawImage(
-        this,
-        0, realSy, this.width, realDh,
-        0, 0, this.width, realDh,
-      )
+      requestIdleCallback(() => {
+        ctx.drawImage(
+          this,
+          0, realSy, this.width, realDh,
+          0, 0, this.width, realDh,
+        )
+        const data = canvas.toDataURL()
+        resolve(data)
+      })
 
       img.onerror = function () {
         reject('Error: Unable to load image.')
       }
 
-      const data = canvas.toDataURL()
-      resolve(data)
     }
     img.src = src
   })

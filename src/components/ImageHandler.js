@@ -14,7 +14,7 @@ export default class ImageHandler extends React.Component {
     topPos: this.props.topPos || 100,
     botPos: this.props.botPos || 20,
     containerHeight: 'unset',
-    locked: false,
+    locked: !!this.props.forceLocked,
   }
 
   onImgLoad = () => {
@@ -141,6 +141,7 @@ export default class ImageHandler extends React.Component {
 
         <img
           alt={''}
+          draggable={false}
           className='img-container'
           src={imageSrc}
           ref={this.getRef('imgRef')}

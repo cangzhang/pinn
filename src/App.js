@@ -79,7 +79,8 @@ class App extends Component {
                 if (!idx) {
                   extraOption = {
                     topPos: 1,
-                    botPos: 1
+                    botPos: 1,
+                    forceLocked: true
                   }
                 }
 
@@ -105,8 +106,6 @@ class App extends Component {
             )}
           </div>
         </div>
-
-        {/*<canvas id={'canvas'} />*/}
       </div>
     );
   }
