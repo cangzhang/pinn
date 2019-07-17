@@ -92,7 +92,7 @@ export const downloadImage = dataUrl => {
   const link = document.createElement('a')
   link.href = dataUrl
   link.style = `display: none`;
-  link.download = `${new Date()}.png`
+  link.download = `${Date.now()}.png`
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
