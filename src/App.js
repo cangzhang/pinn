@@ -54,6 +54,26 @@ class App extends Component {
       })
   }
 
+  renderImgHandler = (url, idx) => {
+    let extraOption = {}
+    if (!idx) {
+      extraOption = {
+        topPos: 1,
+        botPos: 1,
+        forceLocked: true
+      }
+    }
+
+    return <ImageHandler
+      key={`img-${idx}`}
+      imageIdx={idx}
+      imageSrc={url}
+      onRemoveImage={this.removeImg(idx)}
+      onUpdateCrop={this.updateCroppedImage(idx)}
+      {...extraOption}
+    />
+  }
+
   render() {
     const { previewUrls, cropped } = this.state
 
@@ -64,7 +84,7 @@ class App extends Component {
         />
 
         <a
-          href='#pinn'
+          href='#pinn-btn'
           className='button is-dark'
           onClick={this.generateImg}
         >
@@ -74,26 +94,7 @@ class App extends Component {
         <div className='show-area' id='show-area'>
           <div className='file-list'>
             {previewUrls.length > 0
-            && previewUrls.map((url, idx) => {
-                let extraOption = {}
-                if (!idx) {
-                  extraOption = {
-                    topPos: 1,
-                    botPos: 1,
-                    forceLocked: true
-                  }
-                }
-
-                return <ImageHandler
-                  key={`img-${idx}`}
-                  imageIdx={idx}
-                  imageSrc={url}
-                  onRemoveImage={this.removeImg(idx)}
-                  onUpdateCrop={this.updateCroppedImage(idx)}
-                  {...extraOption}
-                />
-              }
-            )}
+            && previewUrls.map(this.renderImgHandler)}
           </div>
 
           <div className='preview'>
