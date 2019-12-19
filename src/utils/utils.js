@@ -1,36 +1,30 @@
-export const cropImage = (src, sy, sh, containerHeight) => {
+export const cropImage = (img, sy, sh, containerHeight) => {
   let canvas
-  const img = new Image()
 
   return new Promise((resolve, reject) => {
-    if (!canvas)
-      canvas = document.createElement('canvas')
+    try {
+      if (!canvas)
+        canvas = document.createElement('canvas')
 
-    const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d')
 
-    img.onload = function () {
-      const realSy = (this.height / containerHeight) * sy
-      const realDh = (this.height / containerHeight) * sh
+      const realSy = (img.naturalHeight / containerHeight) * sy
+      const realDh = (img.naturalHeight / containerHeight) * sh
 
-      canvas.width = this.width
-      canvas.height = realDh || this.height
+      canvas.width = img.naturalWidth
+      canvas.height = realDh || img.naturalHeight
 
-      requestIdleCallback(() => {
-        ctx.drawImage(
-          this,
-          0, realSy, this.width, realDh,
-          0, 0, this.width, realDh,
-        )
-        const data = canvas.toDataURL()
-        resolve(data)
-      })
+      ctx.drawImage(
+        img,
+        0, realSy, img.naturalWidth, realDh,
+        0, 0, img.naturalWidth, realDh,
+      )
 
-      img.onerror = function () {
-        reject('Error: Unable to load image.')
-      }
-
+      const data = canvas.toDataURL()
+      resolve(data)
+    } catch(e) {
+      reject(e)
     }
-    img.src = src
   })
 }
 
@@ -65,7 +59,7 @@ const loadImgFromUrl = (url, shouldInitSize, canvas, data) => {
 }
 
 export const mergeImages = srcUrls => {
-  const canvas = document.createElement('canvas')
+  const canvas = document.createElement('canvas').transferControlToOffscreen()
   const result = []
 
   return srcUrls

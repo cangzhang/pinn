@@ -1,8 +1,9 @@
 import './image-handler.css'
 
+import React from 'react'
+
 import { cropImage } from '../utils/utils'
 import { IMAGE_WIDTH, MIN_GAP } from '../utils/constants'
-import React from 'react'
 
 export default class ImageHandler extends React.Component {
   topRef = null
@@ -15,6 +16,17 @@ export default class ImageHandler extends React.Component {
     botPos: this.props.botPos || 20,
     containerHeight: 'unset',
     locked: !!this.props.forceLocked,
+  }
+
+  generateCropped = () => {
+    const { offsetHeight } = this.containerRef
+    const { topPos, botPos } = this.state
+    const selectH = offsetHeight - topPos - botPos
+
+    cropImage(this.imgRef, topPos, selectH, offsetHeight)
+      .then(data => {
+        this.props.onUpdateCrop(data)
+      })
   }
 
   onImgLoad = () => {
@@ -57,7 +69,7 @@ export default class ImageHandler extends React.Component {
     this.setState({
       [prop]: val
     }, () => {
-      cb && cb()
+      // cb && cb()
     })
   }
 
@@ -86,17 +98,6 @@ export default class ImageHandler extends React.Component {
     }
 
     this.updateState(pos, isTopOne, this.generateCropped)
-  }
-
-  generateCropped = () => {
-    const { offsetHeight } = this.containerRef
-    const { topPos, botPos } = this.state
-    const selectH = offsetHeight - topPos - botPos
-
-    cropImage(this.props.imageSrc, topPos, selectH, offsetHeight)
-      .then(data => {
-        this.props.onUpdateCrop(data)
-      })
   }
 
   getRef = refName => el => {

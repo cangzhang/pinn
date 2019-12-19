@@ -1,11 +1,14 @@
-import './App.css';
+import s from './app.module.scss';
 
 import React, { Component } from 'react';
+
+import WebWorker from './utils/worker-setup'
+import offScreenWorker from './offscreen-canvas.worker';
 
 import ImageInput from './components/ImageInput'
 import ImageHandler from './components/ImageHandler'
 
-import { mergeImages, downloadImage } from "./utils/utils"
+import { mergeImages, downloadImage } from './utils/utils'
 
 class App extends Component {
   state = {
@@ -13,10 +16,25 @@ class App extends Component {
     cropped: []
   }
 
+  componentDidMount() {
+    this.worker = new WebWorker(offScreenWorker)
+
+    this.worker.addEventListener(`message`, ev => {
+      console.log(ev.data)
+    })
+  }
+
+  wake = () => {
+    const { previewUrls } = this.state
+    this.worker.postMessage(previewUrls)
+  }
+
   handleImages = urls => {
     const { previewUrls } = this.state
+    const next = previewUrls.concat(urls)
+
     this.setState({
-      previewUrls: previewUrls.concat(urls)
+      previewUrls: next
     })
   }
 
@@ -78,7 +96,7 @@ class App extends Component {
     const { previewUrls, cropped } = this.state
 
     return (
-      <div className='App'>
+      <div className={s.app}>
         <ImageInput
           onImagesReady={this.handleImages}
         />
@@ -91,13 +109,22 @@ class App extends Component {
           Pinn!
         </a>
 
-        <div className='show-area' id='show-area'>
-          <div className='file-list'>
+        <button
+          className={s.btn}
+          onClick={this.wake}
+        >
+          hey
+        </button>
+
+        <div
+          className={s.selectedPics}
+        >
+          <div className={s.fileList}>
             {previewUrls.length > 0
             && previewUrls.map(this.renderImgHandler)}
           </div>
 
-          <div className='preview'>
+          <div className={s.preview}>
             {cropped.map((imgSrc, idx) =>
               <img
                 alt=''

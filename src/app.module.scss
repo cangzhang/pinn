@@ -1,0 +1,29 @@
+.app {
+  text-align: center;
+
+  .selectedPics {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .fileList {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+img {
+  display: block;
+  transition: height 0.2s linear;
+}
+
+.preview {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  display: flex;
+  margin: 20px auto;
+}
