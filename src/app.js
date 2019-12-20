@@ -2,13 +2,11 @@ import s from './app.module.scss';
 
 import React, { Component } from 'react';
 
-import WebWorker from './utils/worker-setup'
-import offScreenWorker from './offscreen-canvas.worker';
 
 import ImageInput from './components/ImageInput'
 import ImageHandler from './components/ImageHandler'
 
-import { mergeImages, downloadImage } from './utils/utils'
+import { mergeImages, downloadImage, cropImage } from './utils/image-helper'
 
 class App extends Component {
   state = {
@@ -17,16 +15,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.worker = new WebWorker(offScreenWorker)
-
-    this.worker.addEventListener(`message`, ev => {
-      console.log(ev.data)
-    })
-  }
-
-  wake = () => {
-    const { previewUrls } = this.state
-    this.worker.postMessage(previewUrls)
+    this.cropImage = cropImage()
   }
 
   handleImages = urls => {
@@ -88,6 +77,7 @@ class App extends Component {
       imageSrc={url}
       onRemoveImage={this.removeImg(idx)}
       onUpdateCrop={this.updateCroppedImage(idx)}
+      onCropImage={this.cropImage}
       {...extraOption}
     />
   }
@@ -109,13 +99,6 @@ class App extends Component {
           Pinn!
         </a>
 
-        <button
-          className={s.btn}
-          onClick={this.wake}
-        >
-          hey
-        </button>
-
         <div
           className={s.selectedPics}
         >
@@ -133,6 +116,7 @@ class App extends Component {
               />
             )}
           </div>
+          <canvas id={'finalPreview'}/>
         </div>
       </div>
     );

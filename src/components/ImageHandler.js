@@ -2,8 +2,9 @@ import './image-handler.css'
 
 import React from 'react'
 
-import { cropImage } from '../utils/utils'
 import { IMAGE_WIDTH, MIN_GAP } from '../utils/constants'
+import WebWorker from '../utils/worker-setup'
+import offScreenWorker from '../offscreen-canvas.worker';
 
 export default class ImageHandler extends React.Component {
   topRef = null
@@ -18,14 +19,23 @@ export default class ImageHandler extends React.Component {
     locked: !!this.props.forceLocked,
   }
 
+  componentDidMount() {
+    this.worker = new WebWorker(offScreenWorker)
+
+    this.worker.addEventListener('message', ev => {
+      console.log('cropImage: ', ev.data)
+    })
+  }
+
   generateCropped = () => {
     const { offsetHeight } = this.containerRef
     const { topPos, botPos } = this.state
     const selectH = offsetHeight - topPos - botPos
 
-    cropImage(this.imgRef, topPos, selectH, offsetHeight)
+    this.props.onCropImage(this.imgRef, topPos, selectH, offsetHeight)
       .then(data => {
-        this.props.onUpdateCrop(data)
+        this.worker.postMessage(data, [data.canvas])
+        // this.props.onUpdateCrop(data)
       })
   }
 

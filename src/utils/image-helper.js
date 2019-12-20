@@ -1,31 +1,25 @@
-export const cropImage = (img, sy, sh, containerHeight) => {
-  let canvas
+export const cropImage = () => {
+  const canvas = document.querySelector('#finalPreview')
+  const offscreenCanvas = canvas.transferControlToOffscreen()
 
-  return new Promise((resolve, reject) => {
-    try {
-      if (!canvas)
-        canvas = document.createElement('canvas')
-
-      const ctx = canvas.getContext('2d')
-
+  return (img, sy, sh, containerHeight) => {
+    return new Promise((resolve, reject) => {
       const realSy = (img.naturalHeight / containerHeight) * sy
       const realDh = (img.naturalHeight / containerHeight) * sh
 
-      canvas.width = img.naturalWidth
-      canvas.height = realDh || img.naturalHeight
-
-      ctx.drawImage(
-        img,
-        0, realSy, img.naturalWidth, realDh,
-        0, 0, img.naturalWidth, realDh,
-      )
-
-      const data = canvas.toDataURL()
-      resolve(data)
-    } catch(e) {
-      reject(e)
-    }
-  })
+      window.createImageBitmap(img)
+        .then(image => {
+          resolve({
+            image,
+            canvas: offscreenCanvas,
+            realSy,
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+            realDh,
+          })
+        })
+    })
+  }
 }
 
 const loadImgFromUrl = (url, shouldInitSize, canvas, data) => {
