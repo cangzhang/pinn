@@ -17,7 +17,7 @@ export default class ImageHandler extends React.Component {
   }
 
   componentDidMount() {
-    this.worker = new Worker('../offscreen-canvas.worker.js', {
+    this.worker = new Worker('../offscreen-canvas.worker', {
       name: 'offscreen-canvas',
       type: 'module',
     })
@@ -32,7 +32,7 @@ export default class ImageHandler extends React.Component {
     const { topPos, botPos } = this.state
     const selectH = offsetHeight - topPos - botPos
 
-    // todo: deal images together 
+    // todo: deal images together
     this.props.onCropImage(this.imgRef, topPos, selectH, offsetHeight, this.props.imageIdx)
       .then(data => {
         const params = (data.prev && [data.canvas, data.prev]) || [data.canvas]
