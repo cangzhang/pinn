@@ -11,6 +11,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+#finalPreview {
+    display: flex;
+    flex-direction: column;
+}
+
+#finalPreview > canvas {
+    width: 500px;
+}
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

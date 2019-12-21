@@ -83,7 +83,7 @@ class App extends Component {
   }
 
   render() {
-    const { previewUrls, cropped } = this.state
+    const { previewUrls } = this.state
 
     return (
       <div className={s.app}>
@@ -107,6 +107,7 @@ class App extends Component {
             && previewUrls.map(this.renderImgHandler)}
           </div>
 
+{/*
           <div className={s.preview}>
             {cropped.map((imgSrc, idx) =>
               <img
@@ -116,7 +117,11 @@ class App extends Component {
               />
             )}
           </div>
-          <canvas id={'finalPreview'}/>
+*/}
+
+          <div id={'finalPreview'}>
+            <canvas />
+          </div>
         </div>
       </div>
     );

@@ -1,24 +1,31 @@
 export const cropImage = () => {
-  const canvas = document.querySelector('#finalPreview')
-  const offscreenCanvas = canvas.transferControlToOffscreen()
+  return async (img, sy, sh, containerHeight, idx = 0) => {
+    try {
+      const previewCanvas = document.querySelector('#finalPreview > canvas');
 
-  return (img, sy, sh, containerHeight) => {
-    return new Promise((resolve, reject) => {
+      const nCanvas = document.createElement('canvas')
+      nCanvas.id = `img-${idx + 1}`
+      const offscreenCanvas = nCanvas.transferControlToOffscreen()
+
       const realSy = (img.naturalHeight / containerHeight) * sy
       const realDh = (img.naturalHeight / containerHeight) * sh
 
-      window.createImageBitmap(img)
-        .then(image => {
-          resolve({
-            image,
-            canvas: offscreenCanvas,
-            realSy,
-            naturalWidth: img.naturalWidth,
-            naturalHeight: img.naturalHeight,
-            realDh,
-          })
-        })
-    })
+      const image = await window.createImageBitmap(img)
+
+      // previewCanvas.parentNode.replaceChild(nCanvas, previewCanvas)
+      previewCanvas.parentNode.appendChild(nCanvas)
+
+      return {
+        image,
+        canvas: offscreenCanvas,
+        realSy,
+        naturalWidth: img.naturalWidth,
+        naturalHeight: img.naturalHeight,
+        realDh,
+      }
+    } catch (e) {
+      return e
+    }
   }
 }
 

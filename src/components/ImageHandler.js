@@ -27,16 +27,14 @@ export default class ImageHandler extends React.Component {
     })
   }
 
-  generateCropped = () => {
+  generateCropped = async () => {
     const { offsetHeight } = this.containerRef
     const { topPos, botPos } = this.state
     const selectH = offsetHeight - topPos - botPos
 
-    this.props.onCropImage(this.imgRef, topPos, selectH, offsetHeight)
-      .then(data => {
-        this.worker.postMessage(data, [data.canvas])
-        // this.props.onUpdateCrop(data)
-      })
+    const data = await this.props.onCropImage(this.imgRef, topPos, selectH, offsetHeight, this.props.imageIdx)
+    this.worker.postMessage(data, [data.canvas])
+    // this.props.onUpdateCrop(data)
   }
 
   onImgLoad = () => {
