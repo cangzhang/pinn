@@ -1,32 +1,52 @@
 export const cropImage = () => {
-  return async (img, sy, sh, containerHeight, idx = 0) => {
-    try {
-      const previewCanvas = document.querySelector('#finalPreview > canvas');
+  const parentNode = document.querySelector('#finalPreview')
+  const transfered = []
 
+  return (img, sy, sh, containerHeight, idx = 0) =>
+    new Promise((resolve, reject) => {
       const nCanvas = document.createElement('canvas')
       nCanvas.id = `img-${idx + 1}`
       const offscreenCanvas = nCanvas.transferControlToOffscreen()
+      transfered.push(offscreenCanvas)
 
       const realSy = (img.naturalHeight / containerHeight) * sy
       const realDh = (img.naturalHeight / containerHeight) * sh
 
-      const image = await window.createImageBitmap(img)
+      parentNode.appendChild(nCanvas)
 
-      // previewCanvas.parentNode.replaceChild(nCanvas, previewCanvas)
-      previewCanvas.parentNode.appendChild(nCanvas)
+      window.createImageBitmap(img)
+        .then(image => {
+          const prevCanvas = document.querySelector(`#finalPreview canvas#img-${idx}`)
+          // parentNode.replaceChild(nCanvas, prevCanvas)
+          console.log(prevCanvas)
 
-      return {
-        image,
-        canvas: offscreenCanvas,
-        realSy,
-        naturalWidth: img.naturalWidth,
-        naturalHeight: img.naturalHeight,
-        realDh,
-      }
-    } catch (e) {
-      return e
-    }
-  }
+          resolve({
+            prev: transfered[idx - 1],
+            canvas: offscreenCanvas,
+            image,
+            realSy,
+            naturalWidth: img.naturalWidth,
+            naturalHeight: img.naturalHeight,
+            realDh,
+          })
+        })
+    })
+}
+
+
+export const drawImage = (data) => {
+  const { canvas, realSy, naturalWidth, naturalHeight, realDh, image } = data
+
+  const ctx = canvas.getContext('2d')
+
+  canvas.width = naturalWidth
+  canvas.height = realDh || naturalHeight
+
+  ctx.drawImage(
+    image,
+    0, realSy, naturalWidth, realDh,
+    0, 0, naturalWidth, realDh,
+  )
 }
 
 const loadImgFromUrl = (url, shouldInitSize, canvas, data) => {

@@ -22,22 +22,22 @@ export default class ImageHandler extends React.Component {
       type: 'module',
     })
 
-    this.worker.addEventListener('message', ev => {
+    this.worker.onmessage = ev => {
       console.log('cropImage: ', ev.data)
-    })
+    }
   }
 
-  generateCropped = async () => {
+  generateCropped = () => {
     const { offsetHeight } = this.containerRef
     const { topPos, botPos } = this.state
     const selectH = offsetHeight - topPos - botPos
 
-    const data = await this.props.onCropImage(this.imgRef, topPos, selectH, offsetHeight, this.props.imageIdx)
-
-    this.worker.postMessage({
-      ...data,
-      '///OperationName///': 'CropImage',
-    }, [data.canvas])
+    // todo: deal images together 
+    this.props.onCropImage(this.imgRef, topPos, selectH, offsetHeight, this.props.imageIdx)
+      .then(data => {
+        const params = (data.prev && [data.canvas, data.prev]) || [data.canvas]
+        this.worker.postMessage(data, params)
+      })
     // this.props.onUpdateCrop(data)
   }
 
