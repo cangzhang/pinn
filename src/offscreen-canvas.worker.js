@@ -1,49 +1,21 @@
 /* eslint-disable no-restricted-globals */
 
-export default () => {
-  const OpName = `///OperationName///`
+import { MIN_GAP } from './utils/constants'
 
-  function drawImageWithSideEffect() {
-    let canvas
+self.addEventListener('message', ev => {
+  if (!ev) return
 
-    return function (rest) {
-      const { realSy, naturalWidth, naturalHeight, realDh, image } = rest
-      if (!canvas) {
-        canvas = rest.canvas
-      }
+  const { canvas, realSy, naturalWidth, naturalHeight, realDh, image } = ev.data
+  const ctx = canvas.getContext('2d')
 
-      const ctx = canvas.getContext('2d')
-      canvas.width = naturalWidth
-      canvas.height = realDh || naturalHeight
+  canvas.width = naturalWidth
+  canvas.height = realDh || naturalHeight
 
-      ctx.drawImage(
-        image,
-        0, realSy, naturalWidth, realDh,
-        0, 0, naturalWidth, realDh,
-      )
+  ctx.drawImage(
+    image,
+    0, realSy, naturalWidth, realDh,
+    0, 0, naturalWidth, realDh,
+  )
 
-      return {
-        imageDate: 'cropImage'
-      }
-    }
-  }
-  
-  self.addEventListener('message', ev => {
-    if (!ev) return
-
-    const drawImage = drawImageWithSideEffect()
-    const { [OpName]: operation, ...rest } = ev
-
-    let data
-    switch (operation) {
-      case 'CropImage': {
-        data = drawImage(rest)
-        break
-      }
-      default:
-        break
-    }
-
-    postMessage(data)
-  })
-}
+  postMessage(MIN_GAP)
+})
