@@ -1,6 +1,7 @@
 import s from './app.module.scss';
 
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { saveAs } from 'file-saver'
 
 import { mergeImages, downloadImage, preparePreview } from './utils/image-helper'
 
@@ -67,11 +68,13 @@ class App extends Component {
 
   generateImg = (ev) => {
     ev.preventDefault()
-    const { cropped } = this.state
-    mergeImages(cropped)
-      .then(data => {
-        downloadImage(data)
-      })
+  }
+
+  download = () => {
+    document.querySelector('#finalPreview > canvas')
+      .toBlob((blob) => {
+        saveAs(blob, `pinned-image.png`);
+      });
   }
 
   collectImageData = (imgRef, topPos, selectH, offsetHeight, imageIdx) => {
@@ -126,13 +129,25 @@ class App extends Component {
           onSelectImages={this.selectImages}
         />
 
-        <a
-          href='#pinn-btn'
-          className='button is-dark'
-          onClick={this.generateImg}
-        >
-          Pinn!
-        </a>
+        <div>
+          <a
+            href='#pinn-btn'
+            className='button is-dark'
+            onClick={this.generateImg}
+          >
+            Pinn!
+          </a>
+          <a
+            style={{
+              marginLeft: '20px'
+            }}
+            href='#download'
+            className='button'
+            onClick={this.download}
+          >
+            Download
+          </a>
+        </div>
 
         <div
           className={s.selectedPics}
