@@ -2,20 +2,33 @@ import s from './app.module.scss';
 
 import React, { Component } from 'react';
 
+import { mergeImages, downloadImage, preparePreview } from './utils/image-helper'
 
 import ImageInput from './components/ImageInput'
 import ImageHandler from './components/ImageHandler'
 
-import { mergeImages, downloadImage, cropImage } from './utils/image-helper'
-
 class App extends Component {
   state = {
     previewUrls: [],
-    cropped: []
+    cropped: [],
+    imageData: [],
   }
 
   componentDidMount() {
-    this.cropImage = cropImage()
+    this.worker = new Worker('./offscreen-canvas.worker', {
+      name: 'offscreen-canvas.worker',
+      type: 'module',
+    })
+
+    this.worker.onmessage = ev => {
+      console.log('preview: ', ev.data)
+    }
+  }
+
+  selectImages = len => {
+    this.setState({
+      imageData: Array(len).fill(null)
+    })
   }
 
   handleImages = urls => {
@@ -61,6 +74,27 @@ class App extends Component {
       })
   }
 
+  collectImageData = (imgRef, topPos, selectH, offsetHeight, imageIdx) => {
+    const { imageData } = this.state
+    const next = [
+      ...imageData.slice(0, imageIdx),
+      { imgRef, topPos, selectH, offsetHeight, imageIdx },
+      ...imageData.slice(imageIdx + 1)
+    ]
+
+    this.setState({
+      imageData: next
+    })
+
+    const shouldShowPreview = next.every(Boolean)
+    if (!shouldShowPreview) return
+
+    preparePreview(next)
+      .then(data => {
+        this.worker.postMessage(data, [data.canvas])
+      })
+  }
+
   renderImgHandler = (url, idx) => {
     let extraOption = {}
     if (!idx) {
@@ -77,7 +111,7 @@ class App extends Component {
       imageSrc={url}
       onRemoveImage={this.removeImg(idx)}
       onUpdateCrop={this.updateCroppedImage(idx)}
-      onCropImage={this.cropImage}
+      onCollectImageData={this.collectImageData}
       {...extraOption}
     />
   }
@@ -89,6 +123,7 @@ class App extends Component {
       <div className={s.app}>
         <ImageInput
           onImagesReady={this.handleImages}
+          onSelectImages={this.selectImages}
         />
 
         <a
@@ -107,7 +142,7 @@ class App extends Component {
             && previewUrls.map(this.renderImgHandler)}
           </div>
 
-{/*
+          {/*
           <div className={s.preview}>
             {cropped.map((imgSrc, idx) =>
               <img
@@ -120,7 +155,7 @@ class App extends Component {
 */}
 
           <div id={'finalPreview'}>
-            <canvas />
+            <canvas/>
           </div>
         </div>
       </div>

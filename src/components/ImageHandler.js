@@ -16,29 +16,12 @@ export default class ImageHandler extends React.Component {
     locked: !!this.props.forceLocked,
   }
 
-  componentDidMount() {
-    this.worker = new Worker('../offscreen-canvas.worker', {
-      name: 'offscreen-canvas',
-      type: 'module',
-    })
-
-    this.worker.onmessage = ev => {
-      console.log('cropImage: ', ev.data)
-    }
-  }
-
   generateCropped = () => {
     const { offsetHeight } = this.containerRef
     const { topPos, botPos } = this.state
     const selectH = offsetHeight - topPos - botPos
 
-    // todo: deal images together
-    this.props.onCropImage(this.imgRef, topPos, selectH, offsetHeight, this.props.imageIdx)
-      .then(data => {
-        const params = (data.prev && [data.canvas, data.prev]) || [data.canvas]
-        this.worker.postMessage(data, params)
-      })
-    // this.props.onUpdateCrop(data)
+    this.props.onCollectImageData(this.imgRef, topPos, selectH, offsetHeight, this.props.imageIdx)
   }
 
   onImgLoad = () => {

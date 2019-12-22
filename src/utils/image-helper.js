@@ -1,52 +1,68 @@
-export const cropImage = () => {
-  const parentNode = document.querySelector('#finalPreview')
-  const transfered = []
+export const preparePreview = (data) => {
+  if (!data.length)
+    return Promise.reject(false)
 
-  return (img, sy, sh, containerHeight, idx = 0) =>
-    new Promise((resolve, reject) => {
-      const nCanvas = document.createElement('canvas')
-      nCanvas.id = `img-${idx + 1}`
-      const offscreenCanvas = nCanvas.transferControlToOffscreen()
-      transfered.push(offscreenCanvas)
+  // init canvas
+  const canvas = document.createElement('canvas')
+  const { width, height } = data.reduce((res, { imgRef }) => {
+    return {
+      height: res.height + imgRef.naturalHeight,
+      width: Math.max(res.width, imgRef.naturalWidth)
+    }
+  }, { width: 0, height: 0 })
+  canvas.width = width
+  canvas.height = height
 
-      const realSy = (img.naturalHeight / containerHeight) * sy
-      const realDh = (img.naturalHeight / containerHeight) * sh
+  document.querySelector('#finalPreview').replaceChild(
+    canvas,
+    document.querySelector('#finalPreview > canvas')
+  )
 
-      parentNode.appendChild(nCanvas)
+  const createImages = data.map(i => window.createImageBitmap(i.imgRef))
+  const offscreenCanvas = canvas.transferControlToOffscreen()
 
-      window.createImageBitmap(img)
-        .then(image => {
-          const prevCanvas = document.querySelector(`#finalPreview canvas#img-${idx}`)
-          // parentNode.replaceChild(nCanvas, prevCanvas)
-          console.log(prevCanvas)
+  return Promise.all(createImages)
+    .then(images => {
+      return {
+        images,
+        canvas: offscreenCanvas,
+        imageData: data.map((item) => {
+          const {
+            imgRef: img,
+            topPos: sy,
+            selectH: sh,
+            offsetHeight: containerHeight,
+          } = item
 
-          resolve({
-            prev: transfered[idx - 1],
-            canvas: offscreenCanvas,
-            image,
+          const realSy = (img.naturalHeight / containerHeight) * sy
+          const realDh = (img.naturalHeight / containerHeight) * sh
+
+          return {
             realSy,
-            naturalWidth: img.naturalWidth,
-            naturalHeight: img.naturalHeight,
             realDh,
-          })
-        })
+            naturalHeight: img.naturalHeight,
+            naturalWidth: img.naturalWidth
+          }
+        }),
+      }
     })
 }
 
+export const bunchDrawOffscreenImage = ({ images, canvas, imageData }) => {
+  const ctx = canvas.getContext(`2d`)
 
-export const drawImage = (data) => {
-  const { canvas, realSy, naturalWidth, naturalHeight, realDh, image } = data
+  images.forEach((i, idx) => {
+    const { realSy, realDh, naturalWidth } = imageData[idx]
+    const dy = imageData[idx - 1] && parseInt(imageData[idx - 1].naturalHeight, 10)
 
-  const ctx = canvas.getContext('2d')
+    console.log(realSy, naturalWidth, realDh, dy)
 
-  canvas.width = naturalWidth
-  canvas.height = realDh || naturalHeight
-
-  ctx.drawImage(
-    image,
-    0, realSy, naturalWidth, realDh,
-    0, 0, naturalWidth, realDh,
-  )
+    ctx.drawImage(
+      i,
+      0, realSy, naturalWidth, realDh,
+      0, dy || 0, naturalWidth, realDh,
+    )
+  })
 }
 
 const loadImgFromUrl = (url, shouldInitSize, canvas, data) => {

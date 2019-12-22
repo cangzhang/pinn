@@ -13,6 +13,8 @@ export default class ImageReader extends React.Component {
   handleImageChosen = ev => {
     const files = ev.target.files
 
+    this.props.onSelectImages(files.length || 0)
+
     this.setState({
       files
     })
