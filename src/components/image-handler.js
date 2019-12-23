@@ -1,7 +1,7 @@
 import './image-handler.css'
 
 import React from 'react'
-import { IMAGE_WIDTH, MIN_GAP } from '../utils/constants'
+import { IMAGE_WIDTH, MIN_GAP } from 'src/utils/constants'
 
 export default class ImageHandler extends React.Component {
   topRef = null
@@ -25,6 +25,8 @@ export default class ImageHandler extends React.Component {
   }
 
   onImgLoad = () => {
+    this.props.onImageLoad()
+
     const { naturalHeight, naturalWidth } = this.imgRef
     const height = (naturalHeight / naturalWidth) * IMAGE_WIDTH
 
@@ -39,7 +41,7 @@ export default class ImageHandler extends React.Component {
     }
 
     this.setState({ ...nState }, () => {
-      this.generateCropped()
+      // this.generateCropped()
     })
   }
 

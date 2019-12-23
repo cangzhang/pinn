@@ -3,16 +3,17 @@ import s from './app.module.scss';
 import React, { Component } from 'react'
 import { saveAs } from 'file-saver'
 
-import { mergeImages, downloadImage, preparePreview } from './utils/image-helper'
+import { preparePreview } from 'src/utils/image.helper'
 
-import ImageInput from './components/ImageInput'
-import ImageHandler from './components/ImageHandler'
+import ImageInput from 'src/components/image-input'
+import ImageHandler from 'src/components/image-handler'
 
 class App extends Component {
   state = {
     previewUrls: [],
     cropped: [],
     imageData: [],
+    files: [],
   }
 
   componentDidMount() {
@@ -32,12 +33,9 @@ class App extends Component {
     })
   }
 
-  handleImages = urls => {
-    const { previewUrls } = this.state
-    const next = previewUrls.concat(urls)
-
+  handleFiles = files => {
     this.setState({
-      previewUrls: next
+      files
     })
   }
 
@@ -98,7 +96,11 @@ class App extends Component {
       })
   }
 
-  renderImgHandler = (url, idx) => {
+  revokeFile = file => () => {
+    window.URL.revokeObjectURL(file)
+  }
+
+  renderImgHandler = (file, idx) => {
     let extraOption = {}
     if (!idx) {
       extraOption = {
@@ -107,25 +109,27 @@ class App extends Component {
         forceLocked: true
       }
     }
+    const src = window.URL.createObjectURL(file)
 
     return <ImageHandler
       key={`img-${idx}`}
       imageIdx={idx}
-      imageSrc={url}
+      imageSrc={src}
       onRemoveImage={this.removeImg(idx)}
       onUpdateCrop={this.updateCroppedImage(idx)}
       onCollectImageData={this.collectImageData}
+      onImageLoad={this.revokeFile(file)}
       {...extraOption}
     />
   }
 
   render() {
-    const { previewUrls } = this.state
+    const { files } = this.state
 
     return (
       <div className={s.app}>
         <ImageInput
-          onImagesReady={this.handleImages}
+          onFilesReady={this.handleFiles}
           onSelectImages={this.selectImages}
         />
 
@@ -153,8 +157,8 @@ class App extends Component {
           className={s.selectedPics}
         >
           <div className={s.fileList}>
-            {previewUrls.length > 0
-            && previewUrls.map(this.renderImgHandler)}
+            {files.length > 0
+            && Array.from(files).map(this.renderImgHandler)}
           </div>
 
           {/*

@@ -13,19 +13,19 @@ export const preparePreview = (data) => {
   canvas.width = width
   canvas.height = height
 
-  document.querySelector('#finalPreview').replaceChild(
-    canvas,
-    document.querySelector('#finalPreview > canvas')
-  )
+  document.querySelector('#finalPreview')
+    .replaceChild(
+      canvas,
+      document.querySelector('#finalPreview > canvas')
+    )
 
   const createImages = data.map(i => window.createImageBitmap(i.imgRef))
-  const offscreenCanvas = canvas.transferControlToOffscreen()
 
   return Promise.all(createImages)
     .then(images => {
       return {
         images,
-        canvas: offscreenCanvas,
+        canvas: canvas.transferControlToOffscreen(),
         imageData: data.map((item) => {
           const {
             imgRef: img,
@@ -46,23 +46,6 @@ export const preparePreview = (data) => {
         }),
       }
     })
-}
-
-export const bunchDrawOffscreenImage = ({ images, canvas, imageData }) => {
-  const ctx = canvas.getContext(`2d`)
-
-  images.forEach((i, idx) => {
-    const { realSy, realDh, naturalWidth } = imageData[idx]
-    const dy = imageData[idx - 1] && parseInt(imageData[idx - 1].naturalHeight, 10)
-
-    console.log(realSy, naturalWidth, realDh, dy)
-
-    ctx.drawImage(
-      i,
-      0, realSy, naturalWidth, realDh,
-      0, dy || 0, naturalWidth, realDh,
-    )
-  })
 }
 
 const loadImgFromUrl = (url, shouldInitSize, canvas, data) => {

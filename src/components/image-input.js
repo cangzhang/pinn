@@ -16,23 +16,25 @@ export default class ImageReader extends React.Component {
     this.props.onSelectImages(files.length || 0)
 
     this.setState({
-      files
+      files: [...files]
     })
-    Object.keys(files).forEach((cur, idx) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(files[cur])
-      reader.onloadend = () => {
-        const { previewUrls } = this.state
-        previewUrls[idx] = reader.result
-        this.setState({
-          previewUrls
-        }, () => {
-          if (previewUrls.length === files.length) {
-            this.props.onImagesReady(previewUrls)
-          }
-        })
-      }
-    })
+
+    this.props.onFilesReady(files)
+
+    // Object.keys(files).forEach((cur, idx) => {
+    //   const reader = new FileReader()
+    //   reader.readAsDataURL(files[cur])
+    //   reader.onloadend = () => {
+    //     const { previewUrls } = this.state
+    //     previewUrls[idx] = reader.result
+    //     this.setState({
+    //       previewUrls
+    //     }, () => {
+    //       if (previewUrls.length === files.length) {
+    //       }
+    //     })
+    //   }
+    // })
   }
 
   createInputRef = e => this.inputRef = e
@@ -60,7 +62,7 @@ export default class ImageReader extends React.Component {
             </span>
           </label>
         </div>
-        </div>
+      </div>
     )
   }
 }
