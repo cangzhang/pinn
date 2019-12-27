@@ -41,7 +41,7 @@ export default class ImageHandler extends React.Component {
     }
 
     this.setState({ ...nState }, () => {
-      // this.generateCropped()
+      this.generateCropped()
     })
   }
 

@@ -35,7 +35,7 @@ class App extends Component {
 
   handleFiles = files => {
     this.setState({
-      files
+      files,
     })
   }
 
@@ -96,7 +96,7 @@ class App extends Component {
       })
   }
 
-  revokeFile = file => () => {
+  onImageLoad = file => () => {
     window.URL.revokeObjectURL(file)
   }
 
@@ -109,16 +109,15 @@ class App extends Component {
         forceLocked: true
       }
     }
-    const src = window.URL.createObjectURL(file)
 
     return <ImageHandler
       key={`img-${idx}`}
       imageIdx={idx}
-      imageSrc={src}
+      imageSrc={file}
       onRemoveImage={this.removeImg(idx)}
       onUpdateCrop={this.updateCroppedImage(idx)}
       onCollectImageData={this.collectImageData}
-      onImageLoad={this.revokeFile(file)}
+      onImageLoad={this.onImageLoad(file)}
       {...extraOption}
     />
   }
@@ -158,7 +157,7 @@ class App extends Component {
         >
           <div className={s.fileList}>
             {files.length > 0
-            && Array.from(files).map(this.renderImgHandler)}
+            && files.map(this.renderImgHandler)}
           </div>
 
           {/*

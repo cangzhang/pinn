@@ -14,12 +14,11 @@ export default class ImageReader extends React.Component {
     const files = ev.target.files
 
     this.props.onSelectImages(files.length || 0)
-
+    const res = Array.from(files).map(f => window.URL.createObjectURL(f))
     this.setState({
-      files: [...files]
+      files: res
     })
-
-    this.props.onFilesReady(files)
+    this.props.onFilesReady(res)
 
     // Object.keys(files).forEach((cur, idx) => {
     //   const reader = new FileReader()
