@@ -1,9 +1,45 @@
+export const drawImageByBlock = data => {
+  const tasks = data.map(i => {
+    const { imgRef } = i;
+    return window.createImageBitmap(imgRef)
+  })
+
+  return Promise.all(tasks)
+    .then(images => {
+      const canvas = document.createElement('canvas')
+      document.querySelector('#finalPreview').appendChild(canvas)
+
+      return images.map((i, idx) => {
+        const {
+          imgRef: img,
+          topPos: sy,
+          selectH: sh,
+          offsetHeight: containerHeight,
+        } = data[idx];
+
+        const realSy = (img.naturalHeight / containerHeight) * sy
+        const realDh = (img.naturalHeight / containerHeight) * sh
+
+        return {
+          image: i,
+          canvas: canvas.transferControlToOffscreen(),
+          imageData: {
+            realSy,
+            realDh,
+            naturalHeight: img.naturalHeight,
+            naturalWidth: img.naturalWidth
+          }
+        }
+      })
+    })
+}
+
 export const preparePreview = (data) => {
   if (!data.length)
     return Promise.reject(false)
 
-  // init canvas
   const canvas = document.createElement('canvas')
+
   const { width, height } = data.reduce((res, { imgRef }) => {
     return {
       height: res.height + imgRef.naturalHeight,

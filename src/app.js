@@ -3,7 +3,7 @@ import s from './app.module.scss';
 import React, { Component } from 'react'
 import { saveAs } from 'file-saver'
 
-import { preparePreview } from 'src/utils/image.helper'
+import { preparePreview, drawImageByBlock } from 'src/utils/image.helper'
 
 import ImageInput from 'src/components/image-input'
 import ImageHandler from 'src/components/image-handler'
@@ -90,10 +90,18 @@ class App extends Component {
     const shouldShowPreview = next.every(Boolean)
     if (!shouldShowPreview) return
 
-    preparePreview(next)
+
+    drawImageByBlock(next)
       .then(data => {
-        this.worker.postMessage(data, [data.canvas])
+        data.forEach(i => {
+          this.worker.postMessage(i, [i.canvas])
+        })
       })
+
+    // preparePreview(next)
+    //   .then(data => {
+    //     this.worker.postMessage(data, [data.canvas])
+    //   })
   }
 
   onImageLoad = file => () => {
