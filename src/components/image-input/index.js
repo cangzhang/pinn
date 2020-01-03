@@ -2,7 +2,7 @@ import './image-input.css'
 
 import React from 'react'
 
-export default class ImageReader extends React.Component {
+export default class ImageInput extends React.Component {
   inputRef = null
 
   state = {
