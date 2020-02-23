@@ -1,9 +1,12 @@
 import s from './app.module.scss';
 
+import * as Comlink from 'comlink';
 import React, { Component } from 'react'
 import { saveAs } from 'file-saver'
 
-import { preparePreview } from 'src/utils/image.helper'
+import { drawImageByBlock } from 'src/utils/image.helper'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import { drawOneImage } from 'comlink-loader?singleton!src/worker/offscreen.worker';
 
 import ImageInput from 'src/components/image-input'
 import ImageHandler from 'src/components/image-handler'
@@ -14,17 +17,6 @@ class App extends Component {
     cropped: [],
     imageData: [],
     files: [],
-  }
-
-  componentDidMount() {
-    this.worker = new Worker('./offscreen-canvas.worker', {
-      name: 'offscreen-canvas.worker',
-      type: 'module',
-    })
-
-    this.worker.onmessage = ev => {
-      console.log('preview: ', ev.data)
-    }
   }
 
   selectImages = len => {
@@ -75,7 +67,7 @@ class App extends Component {
       });
   }
 
-  collectImageData = (imgRef, topPos, selectH, offsetHeight, imageIdx) => {
+  collectImageData = async (imgRef, topPos, selectH, offsetHeight, imageIdx) => {
     const { imageData } = this.state
     const next = [
       ...imageData.slice(0, imageIdx),
@@ -90,10 +82,9 @@ class App extends Component {
     const shouldShowPreview = next.every(Boolean)
     if (!shouldShowPreview) return
 
-    preparePreview(next)
-      .then(data => {
-        this.worker.postMessage(data, [data.canvas])
-      })
+    const data = await drawImageByBlock(next)
+    const canvas = document.querySelector('#finalPreview > canvas').transferControlToOffscreen();
+    await drawOneImage(Comlink.transfer({ data, canvas }, [canvas]))
   }
 
   onImageLoad = file => () => {
