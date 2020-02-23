@@ -3375,6 +3375,21 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
+comlink-loader@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/comlink-loader/download/comlink-loader-2.0.0.tgz#a1f4b59a6bdb9b774f4d51dd90324d3844a0ee62"
+  integrity sha1-ofS1mmvbm3dPTVHdkDJNOESg7mI=
+  dependencies:
+    comlink "^4.2.0"
+    loader-utils "^1.1.0"
+    slash "^3.0.0"
+    worker-loader "^2.0.0"
+
+comlink@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/comlink/download/comlink-4.2.0.tgz#be9e968a19d797a44a042cf1eac03775d2ed39fe"
+  integrity sha1-vp6WihnXl6RKBCzx6sA3ddLtOf4=
+
 commander@2.17.x:
   version "2.17.1"
   resolved "https://registry.npm.taobao.org/commander/download/commander-2.17.1.tgz?cache=0&sync_timestamp=1573464028535&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
@@ -11397,19 +11412,19 @@ worker-loader@^2.0.0:
     loader-utils "^1.0.0"
     schema-utils "^0.4.0"
 
-worker-plugin@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.npm.taobao.org/worker-plugin/download/worker-plugin-3.2.0.tgz#ddae9f161b76fcbaacf8f54ecd037844584e43e7"
-  integrity sha1-3a6fFht2/Lqs+PVOzQN4RFhOQ+c=
-  dependencies:
-    loader-utils "^1.1.0"
-
 worker-rpc@^0.1.0:
   version "0.1.1"
   resolved "https://registry.npm.taobao.org/worker-rpc/download/worker-rpc-0.1.1.tgz#cb565bd6d7071a8f16660686051e969ad32f54d5"
   integrity sha1-y1Zb1tcHGo8WZgaGBR6WmtMvVNU=
   dependencies:
     microevent.ts "~0.1.1"
+
+workerize-loader@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/workerize-loader/download/workerize-loader-1.1.0.tgz#d3a634390dcb685cc1ee292cd1fffeef0a646044"
+  integrity sha1-06Y0OQ3LaFzB7iks0f/+7wpkYEQ=
+  dependencies:
+    loader-utils "^1.2.3"
 
 wrap-ansi@^2.0.0:
   version "2.1.0"

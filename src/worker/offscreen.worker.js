@@ -13,14 +13,17 @@ export const bunchDrawOffscreenImage = ({ images, canvas, imageData }) => {
   })
 }
 
-export const drawOneImage = ({ image, canvas, imageData }) => {
+export const drawOneImage = async ({ data, canvas }) => {
   const ctx = canvas.getContext(`2d`)
-  const { realSy, realDh, naturalWidth } = imageData
-  const dy = imageData && parseInt(imageData.naturalHeight, 10)
 
-  ctx.drawImage(
-    image,
-    0, parseInt(realSy, 10), naturalWidth, parseInt(realDh, 10),
-    0, dy || 0, naturalWidth, parseInt(realDh, 10),
-  )
+  data.forEach(({ image, imageData }) => {
+    const { realSy, realDh, naturalWidth } = imageData
+    const dy = imageData && parseInt(imageData.naturalHeight, 10)
+
+    ctx.drawImage(
+      image,
+      0, parseInt(realSy, 10), naturalWidth, parseInt(realDh, 10),
+      0, dy || 0, naturalWidth, parseInt(realDh, 10),
+    )
+  })
 }
