@@ -60,6 +60,7 @@ class App extends Component {
     ev.preventDefault()
   }
 
+  // todo
   download = () => {
     document.querySelector('#final-preview > canvas')
       .toBlob((blob) => {
@@ -164,8 +165,7 @@ class App extends Component {
 */}
 
           <div id={'final-preview'}>
-            <canvas/>
-            <canvas id={`test`}/>
+            <canvas width={300} height={3000}/>
           </div>
         </div>
       </div>

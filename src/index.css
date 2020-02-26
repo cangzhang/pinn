@@ -16,10 +16,6 @@ body {
     flex-direction: column;
 }
 
-#final-preview > canvas {
-    width: 500px;
-}
-
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
