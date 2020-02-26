@@ -2,29 +2,28 @@ export const drawImageByBlock = data => {
   const tasks = data.map(i => window.createImageBitmap(i.imgRef))
 
   return Promise.all(tasks)
-    .then(images => {
-      const imgData = images.map((i, idx) => {
+    .then(bitmaps => {
+      const imgData = data.map(i => {
         const {
           imgRef: img,
           topPos: sy,
           selectH: sh,
           offsetHeight: containerHeight,
-        } = data[idx];
+        } = i;
 
         const realSy = (img.naturalHeight / containerHeight) * sy
         const realDh = (img.naturalHeight / containerHeight) * sh
 
+        debugger
         return {
-          image: i,
-          imageData: {
-            realSy,
-            realDh,
-            naturalHeight: img.naturalHeight,
-            naturalWidth: img.naturalWidth
-          }
+          realSy,
+          realDh,
+          naturalHeight: img.naturalHeight,
+          naturalWidth: img.naturalWidth
         }
       })
-      return imgData
+
+      return [bitmaps, imgData]
     })
 }
 

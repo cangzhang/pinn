@@ -11,12 +11,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-#finalPreview {
+#final-preview {
     display: flex;
     flex-direction: column;
 }
 
-#finalPreview > canvas {
+#final-preview > canvas {
     width: 500px;
 }
 

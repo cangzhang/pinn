@@ -61,7 +61,7 @@ class App extends Component {
   }
 
   download = () => {
-    document.querySelector('#finalPreview > canvas')
+    document.querySelector('#final-preview > canvas')
       .toBlob((blob) => {
         saveAs(blob, `pinned-image.png`);
       });
@@ -82,9 +82,9 @@ class App extends Component {
     const shouldShowPreview = next.every(Boolean)
     if (!shouldShowPreview) return
 
-    const data = await drawImageByBlock(next)
-    const canvas = document.querySelector('#finalPreview > canvas').transferControlToOffscreen();
-    await drawOneImage(Comlink.transfer({ data, canvas }, [canvas]))
+    const canvas = document.querySelector('#final-preview > canvas').transferControlToOffscreen();
+    const [bitmaps, data] = await drawImageByBlock(next)
+    await drawOneImage(Comlink.transfer({ data, canvas, bitmaps }, [...bitmaps, canvas]))
   }
 
   onImageLoad = file => () => {
@@ -163,8 +163,9 @@ class App extends Component {
           </div>
 */}
 
-          <div id={'finalPreview'}>
+          <div id={'final-preview'}>
             <canvas/>
+            <canvas id={`test`}/>
           </div>
         </div>
       </div>

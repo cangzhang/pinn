@@ -25,7 +25,7 @@ export default class ImageHandler extends React.Component {
   }
 
   onImgLoad = () => {
-    this.props.onImageLoad()
+    this.props.onImageLoad(this.imgRef)
 
     const { naturalHeight, naturalWidth } = this.imgRef
     const height = (naturalHeight / naturalWidth) * IMAGE_WIDTH
