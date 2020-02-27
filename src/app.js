@@ -83,9 +83,12 @@ class App extends Component {
     const shouldShowPreview = next.every(Boolean)
     if (!shouldShowPreview) return
 
-    const canvas = document.querySelector('#final-preview > canvas').transferControlToOffscreen();
     const [bitmaps, data] = await drawImageByBlock(next)
-    await drawOneImage(Comlink.transfer({ data, canvas, bitmaps }, [...bitmaps, canvas]))
+    const d = await drawOneImage(Comlink.transfer({ data, bitmaps }, [...bitmaps]))
+
+    const preview = document.querySelector('#final-preview > canvas');
+    const ctx = preview.getContext(`2d`)
+    ctx.drawImage(d, 0, 0)
   }
 
   onImageLoad = file => () => {
