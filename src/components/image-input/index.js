@@ -14,7 +14,9 @@ export default class ImageInput extends React.Component {
     const files = ev.target.files
 
     this.props.onSelectImages(files.length || 0)
-    const res = Array.from(files).map(f => window.URL.createObjectURL(f))
+    const res = Array.from(files)
+      .map(f => window.URL.createObjectURL(f))
+
     this.setState({
       files: res
     })
