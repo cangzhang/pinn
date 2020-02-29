@@ -19,15 +19,18 @@ class App extends Component {
   }
 
   selectImages = len => {
-    this.setState({
-      imageData: Array(len).fill(null)
-    })
+    this.setState(p => ({
+      imageData: [
+        ...p.imageData,
+        ...Array(len).fill(null)
+      ]
+    }))
   }
 
   handleFiles = files => {
-    this.setState({
-      files,
-    })
+    this.setState(p => ({
+      files: p.files.concat(files),
+    }))
   }
 
   removeImg = idx => async () => {
@@ -64,8 +67,8 @@ class App extends Component {
       });
   }
 
-  drawPreview = async (imageData) => {
-    const [bitmaps, data] = await drawImageByBlock(imageData)
+  drawPreview = async images => {
+    const [bitmaps, data] = await drawImageByBlock(images)
     const d = await drawOneImage(Comlink.transfer({ data, bitmaps }, [...bitmaps]))
 
     const preview = document.querySelector('#final-preview > canvas');
@@ -74,7 +77,7 @@ class App extends Component {
     ctx.drawImage(d, 0, 0)
   }
 
-  collectImageData = async (imgRef, topPos, selectH, offsetHeight, imageIdx, always = false) => {
+  collectImageData = (imgRef, topPos, selectH, offsetHeight, imageIdx, always = false) => {
     const { imageData } = this.state
     const next = [
       ...imageData.slice(0, imageIdx),
@@ -85,7 +88,7 @@ class App extends Component {
     this.setState({
       imageData: next
     })
-
+    
     const shouldShowPreview = next.every(Boolean) || always
     shouldShowPreview && this.drawPreview(next)
   }
