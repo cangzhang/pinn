@@ -18,7 +18,7 @@ export const drawOneImage = async ({ data, bitmaps }) => {
       0, dy, dw, vh,
     )
 
-    return dy + vh
+    return dy + vh + 5
   }, 0)
 
   const d = canvas.transferToImageBitmap()

@@ -1,6 +1,8 @@
-import './image-handler.css'
+import s from './image-handler.module.scss'
 
 import React from 'react'
+import cn from 'classnames'
+
 import { IMAGE_WIDTH, MIN_GAP } from 'src/utils/constants'
 
 export default class ImageHandler extends React.Component {
@@ -16,12 +18,12 @@ export default class ImageHandler extends React.Component {
     locked: !!this.props.forceLocked,
   }
 
-  generateCropped = () => {
+  generateCropped = (always = false) => {
     const { offsetHeight } = this.containerRef
     const { topPos, botPos } = this.state
     const selectH = offsetHeight - topPos - botPos
 
-    this.props.onCollectImageData(this.imgRef, topPos, selectH, offsetHeight, this.props.imageIdx)
+    this.props.onCollectImageData(this.imgRef, topPos, selectH, offsetHeight, this.props.imageIdx, always)
   }
 
   onImgLoad = () => {
@@ -66,7 +68,7 @@ export default class ImageHandler extends React.Component {
     this.setState({
       [prop]: val
     }, () => {
-      // cb && cb()
+      cb && cb()
     })
   }
 
@@ -94,60 +96,54 @@ export default class ImageHandler extends React.Component {
       pos = 0
     }
 
-    this.updateState(pos, isTopOne, this.generateCropped)
+    this.updateState(pos, isTopOne, () => this.generateCropped(true))
   }
 
   getRef = refName => el => {
     this[refName] = el
   }
 
-  toggleLock = () => {
-    const { locked } = this.state
-    this.setState({
-      locked: !locked
-    })
-  }
-
   render() {
     const { imageSrc } = this.props
-    const { topPos, botPos, containerHeight, locked } = this.state
+    const { topPos, botPos, containerHeight, } = this.state
 
     return (
       <div
-        className='image-handler-container'
+        className={s.imageHandlerContainer}
         style={{
-          position: 'relative',
           width: `${IMAGE_WIDTH}px`,
           height: containerHeight
         }}
         ref={this.getRef('containerRef')}
       >
-        <div className='ctl-group'>
-          <span className='icon remove-img'>
+        <div className={s.ctlGroup}>
+          <span className={cn(`icon`, s.removeImg)}>
             <i
               className='ion ion-md-close'
               onClick={this.props.onRemoveImage}
             />
           </span>
+          {/*
           <span className='icon lock-img'>
             <i
               className={`ion ${locked ? 'ion-md-lock' : 'ion-md-unlock'}`}
               onClick={this.toggleLock}
             />
           </span>
+*/}
         </div>
 
         <img
+          className={s.imgContainer}
           alt={''}
           draggable={false}
-          className='img-container'
           src={imageSrc}
           ref={this.getRef('imgRef')}
           onLoad={this.onImgLoad}
         />
 
         <div
-          className='overlay-indicator'
+          className={s.overlayIndicator}
           style={{
             top: 0,
             height: `${topPos}px`,
@@ -155,7 +151,7 @@ export default class ImageHandler extends React.Component {
         />
 
         <div
-          className={'select-handler top'}
+          className={cn(s.selectHandler, s.top)}
           style={{
             top: `${topPos}px`
           }}
@@ -166,7 +162,7 @@ export default class ImageHandler extends React.Component {
         />
 
         <div
-          className={'select-handler bottom'}
+          className={cn(s.selectHandler, s.bottom)}
           style={{
             bottom: `${botPos}px`
           }}
@@ -177,7 +173,7 @@ export default class ImageHandler extends React.Component {
         />
 
         <div
-          className='overlay-indicator'
+          className={s.overlayIndicator}
           style={{
             bottom: 0,
             height: `${botPos}px`,

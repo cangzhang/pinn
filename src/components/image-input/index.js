@@ -1,4 +1,4 @@
-import './image-input.css'
+import s from './image-input.module.scss'
 
 import React from 'react'
 
@@ -19,28 +19,13 @@ export default class ImageInput extends React.Component {
       files: res
     })
     this.props.onFilesReady(res)
-
-    // Object.keys(files).forEach((cur, idx) => {
-    //   const reader = new FileReader()
-    //   reader.readAsDataURL(files[cur])
-    //   reader.onloadend = () => {
-    //     const { previewUrls } = this.state
-    //     previewUrls[idx] = reader.result
-    //     this.setState({
-    //       previewUrls
-    //     }, () => {
-    //       if (previewUrls.length === files.length) {
-    //       }
-    //     })
-    //   }
-    // })
   }
 
   createInputRef = e => this.inputRef = e
 
   render() {
     return (
-      <div className='image-input'>
+      <div className={s.imageInput}>
         <div className='file is-boxed'>
           <label className='file-label'>
             <input
@@ -56,7 +41,7 @@ export default class ImageInput extends React.Component {
                 <i className='ion ion-md-cloud-upload'/>
               </span>
               <span className='file-label'>
-                Choose File(s)
+                Add picture(s)
               </span>
             </span>
           </label>

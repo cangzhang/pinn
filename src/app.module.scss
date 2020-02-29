@@ -14,7 +14,7 @@
 
 img {
   display: block;
-  transition: height 0.2s linear;
+  //transition: height 0.2s linear;
 }
 
 .preview {
@@ -26,4 +26,8 @@ img {
 .btn {
   display: flex;
   margin: 20px auto;
+}
+
+.btn-group {
+  margin-bottom: 1ex;
 }

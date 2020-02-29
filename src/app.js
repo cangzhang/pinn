@@ -14,7 +14,6 @@ import ImageHandler from 'src/components/image-handler'
 class App extends Component {
   state = {
     previewUrls: [],
-    cropped: [],
     imageData: [],
     files: [],
   }
@@ -31,33 +30,30 @@ class App extends Component {
     })
   }
 
-  removeImg = idx => () => {
-    const { previewUrls, cropped } = this.state
+  removeImg = idx => async () => {
+    const { previewUrls, imageData, files } = this.state
+
+    const newImageData = [
+      ...imageData.slice(0, idx),
+      ...imageData.slice(idx + 1)
+    ]
     this.setState({
+      files: [
+        ...files.slice(0, idx),
+        ...files.slice(idx + 1),
+      ],
       previewUrls: [
         ...previewUrls.slice(0, idx),
         ...previewUrls.slice(idx + 1)
       ],
-      cropped: [
-        ...cropped.slice(0, idx),
-        ...cropped.slice(idx + 1)
-      ]
+      imageData: newImageData
     })
+
+    await this.drawPreview(newImageData)
   }
 
-  updateCroppedImage = idx => data => {
-    const { cropped } = this.state
-    this.setState({
-      cropped: [
-        ...cropped.slice(0, idx),
-        data,
-        ...cropped.slice(idx + 1)
-      ]
-    })
-  }
-
-  generateImg = (ev) => {
-    ev.preventDefault()
+  generateImg = async () => {
+    await this.drawPreview(this.state.imageData)
   }
 
   // todo
@@ -68,7 +64,17 @@ class App extends Component {
       });
   }
 
-  collectImageData = async (imgRef, topPos, selectH, offsetHeight, imageIdx) => {
+  drawPreview = async (imageData) => {
+    const [bitmaps, data] = await drawImageByBlock(imageData)
+    const d = await drawOneImage(Comlink.transfer({ data, bitmaps }, [...bitmaps]))
+
+    const preview = document.querySelector('#final-preview > canvas');
+    const ctx = preview.getContext(`2d`)
+    ctx.clearRect(0, 0, preview.width, preview.height)
+    ctx.drawImage(d, 0, 0)
+  }
+
+  collectImageData = async (imgRef, topPos, selectH, offsetHeight, imageIdx, always = false) => {
     const { imageData } = this.state
     const next = [
       ...imageData.slice(0, imageIdx),
@@ -80,15 +86,8 @@ class App extends Component {
       imageData: next
     })
 
-    const shouldShowPreview = next.every(Boolean)
-    if (!shouldShowPreview) return
-
-    const [bitmaps, data] = await drawImageByBlock(next)
-    const d = await drawOneImage(Comlink.transfer({ data, bitmaps }, [...bitmaps]))
-
-    const preview = document.querySelector('#final-preview > canvas');
-    const ctx = preview.getContext(`2d`)
-    ctx.drawImage(d, 0, 0)
+    const shouldShowPreview = next.every(Boolean) || always
+    shouldShowPreview && this.drawPreview(next)
   }
 
   onImageLoad = file => () => {
@@ -106,11 +105,10 @@ class App extends Component {
     }
 
     return <ImageHandler
-      key={`img-${idx}`}
+      key={`img-${file}`}
       imageIdx={idx}
       imageSrc={file}
       onRemoveImage={this.removeImg(idx)}
-      onUpdateCrop={this.updateCroppedImage(idx)}
       onCollectImageData={this.collectImageData}
       onImageLoad={this.onImageLoad(file)}
       {...extraOption}
@@ -127,7 +125,7 @@ class App extends Component {
           onSelectImages={this.selectImages}
         />
 
-        <div>
+        <div className={s.btnGroup}>
           <a
             href='#pinn-btn'
             className='button is-dark'
@@ -155,20 +153,8 @@ class App extends Component {
             && files.map(this.renderImgHandler)}
           </div>
 
-          {/*
-          <div className={s.preview}>
-            {cropped.map((imgSrc, idx) =>
-              <img
-                alt=''
-                key={`crop-${idx}`}
-                src={imgSrc}
-              />
-            )}
-          </div>
-*/}
-
           <div id={'final-preview'}>
-            <canvas width={300} height={3000}/>
+            <canvas width={300} height={1000}/>
           </div>
         </div>
       </div>
