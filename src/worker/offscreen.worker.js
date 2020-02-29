@@ -1,4 +1,4 @@
-export const drawOneImage = async ({ data, bitmaps }) => {
+export const drawOffscreenCanvas = async ({ data, bitmaps }) => {
   const canvas = new OffscreenCanvas(300, 1000);
   const ctx = canvas.getContext(`2d`)
   const dw = canvas.width;

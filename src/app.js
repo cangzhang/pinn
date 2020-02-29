@@ -1,12 +1,13 @@
 import s from './app.module.scss';
 
 import * as Comlink from 'comlink';
-import React, { Component } from 'react'
 import { saveAs } from 'file-saver'
+
+import React, { Component } from 'react'
 
 import { drawImageByBlock } from 'src/utils/image.helper'
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import { drawOneImage } from 'comlink-loader?singleton!src/worker/offscreen.worker';
+import { drawOffscreenCanvas } from 'comlink-loader?singleton!src/worker/offscreen.worker';
 
 import ImageInput from 'src/components/image-input'
 import ImageHandler from 'src/components/image-handler'
@@ -69,7 +70,7 @@ class App extends Component {
 
   drawPreview = async images => {
     const [bitmaps, data] = await drawImageByBlock(images)
-    const d = await drawOneImage(Comlink.transfer({ data, bitmaps }, [...bitmaps]))
+    const d = await drawOffscreenCanvas(Comlink.transfer({ data, bitmaps }, [...bitmaps]))
 
     const preview = document.querySelector('#final-preview > canvas');
     const ctx = preview.getContext(`2d`)
@@ -88,7 +89,7 @@ class App extends Component {
     this.setState({
       imageData: next
     })
-    
+
     const shouldShowPreview = next.every(Boolean) || always
     shouldShowPreview && this.drawPreview(next)
   }
