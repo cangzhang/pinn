@@ -15,8 +15,8 @@ export const drawImageByBlock = data => {
         const realSh = (img.naturalHeight / containerHeight) * sh
 
         return {
-          realSy,
-          realSh,
+          realSy: parseInt(realSy, 10),
+          realSh: parseInt(realSh, 10),
         }
       })
 

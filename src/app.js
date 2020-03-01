@@ -7,7 +7,7 @@ import React, { Component } from 'react'
 
 import { drawImageByBlock } from 'src/utils/image.helper'
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import { drawOffscreenCanvas } from 'comlink-loader?singleton!src/worker/offscreen.worker';
+import { drawOffscreenCanvas, downloadImage } from 'comlink-loader?singleton!src/worker/offscreen.worker';
 
 import ImageInput from 'src/components/image-input'
 import ImageHandler from 'src/components/image-handler'
@@ -60,12 +60,12 @@ class App extends Component {
     await this.drawPreview(this.state.imageData)
   }
 
-  // todo
-  download = () => {
-    document.querySelector('#final-preview > canvas')
-      .toBlob((blob) => {
-        saveAs(blob, `pinned-image.png`);
-      });
+  // todo: laggy
+  download = async ev => {
+    ev.preventDefault()
+    const [bitmaps, data] = await drawImageByBlock(this.state.imageData)
+    const blob = await downloadImage(Comlink.transfer({ bitmaps, data }, bitmaps))
+    await saveAs(blob, `pinn-image.png`)
   }
 
   drawPreview = async images => {
