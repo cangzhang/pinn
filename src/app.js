@@ -1,12 +1,14 @@
 import s from './app.module.scss';
+import DownloadIcon from 'ionicons/dist/ionicons/svg/ios-cloud-download.svg'
 
 import * as Comlink from 'comlink';
 import { saveAs } from 'file-saver'
 
 import React, { Component } from 'react'
+import cn from 'classnames'
 
 import { drawImageByBlock } from 'src/utils/image.helper'
-import { removeAllChildren } from 'src/utils/dom.helper'
+import { removeChildren } from 'src/utils/dom.helper'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import { drawOffscreenCanvas, downloadImage } from 'comlink-loader?singleton!src/worker/offscreen.worker';
 
@@ -18,6 +20,7 @@ class App extends Component {
     previewUrls: [],
     imageData: [],
     files: [],
+    canDownload: false,
   }
 
   selectImages = len => {
@@ -61,7 +64,7 @@ class App extends Component {
     await this.drawPreview(this.state.imageData)
   }
 
-  // todo: laggy
+  // todo: may be laggy
   download = async ev => {
     ev.preventDefault()
     const [bitmaps, data] = await drawImageByBlock(this.state.imageData)
@@ -74,12 +77,15 @@ class App extends Component {
     const dw = 300
 
     const container = document.querySelector(`#final-preview`)
-    removeAllChildren(container)
+    removeChildren(container, 'CANVAS')
 
     const canvas = document.createElement(`canvas`)
     container.appendChild(canvas)
     const offscreen = canvas.transferControlToOffscreen()
     await drawOffscreenCanvas(Comlink.transfer({ data, bitmaps, dw, offscreen }, [...bitmaps, offscreen]))
+    this.setState({
+      canDownload: true
+    })
   }
 
   collectImageData = (imgRef, topPos, selectH, offsetHeight, imageIdx, always = false) => {
@@ -124,7 +130,7 @@ class App extends Component {
   }
 
   render() {
-    const { files } = this.state
+    const { files, canDownload } = this.state
 
     return (
       <div className={s.app}>
@@ -141,16 +147,6 @@ class App extends Component {
           >
             Pinn!
           </a>
-          <a
-            style={{
-              marginLeft: '20px'
-            }}
-            href='#download'
-            className='button'
-            onClick={this.download}
-          >
-            Download
-          </a>
         </div>
 
         <div
@@ -161,8 +157,16 @@ class App extends Component {
             && files.map(this.renderImgHandler)}
           </div>
 
-          <div id={'final-preview'}>
-            <canvas width={300} height={1000}/>
+          <div id={'final-preview'} className={s.finalPreview}>
+            {
+              canDownload &&
+              <img
+                alt="download"
+                src={DownloadIcon}
+                className={cn(s.download)}
+                onClick={this.download}
+              />
+            }
           </div>
         </div>
       </div>

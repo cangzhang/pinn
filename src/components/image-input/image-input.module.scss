@@ -1,5 +1,18 @@
 .image-input {
-    display: flex;
-    justify-content: center;
-    margin: 1ex;
+  display: flex;
+  justify-content: center;
+  margin: 1ex;
+}
+
+.trigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 8px;
+  border: 2px solid transparent;
+
+  &:hover {
+    cursor: pointer;
+  }
 }

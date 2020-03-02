@@ -1,7 +1,7 @@
-export const removeAllChildren = node => {
-  let last = node.lastChild
+export const removeChildren = (node, type) => {
+  let last = node.querySelector(type)
   while (last) {
     node.removeChild(last)
-    last = node.lastChild
+    last = node.querySelector(type)
   }
 }
