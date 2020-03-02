@@ -6,6 +6,7 @@ import { saveAs } from 'file-saver'
 import React, { Component } from 'react'
 
 import { drawImageByBlock } from 'src/utils/image.helper'
+import { removeAllChildren } from 'src/utils/dom.helper'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import { drawOffscreenCanvas, downloadImage } from 'comlink-loader?singleton!src/worker/offscreen.worker';
 
@@ -70,12 +71,15 @@ class App extends Component {
 
   drawPreview = async images => {
     const [bitmaps, data] = await drawImageByBlock(images)
-    const d = await drawOffscreenCanvas(Comlink.transfer({ data, bitmaps }, [...bitmaps]))
+    const dw = 300
 
-    const preview = document.querySelector('#final-preview > canvas');
-    const ctx = preview.getContext(`2d`)
-    ctx.clearRect(0, 0, preview.width, preview.height)
-    ctx.drawImage(d, 0, 0)
+    const container = document.querySelector(`#final-preview`)
+    removeAllChildren(container)
+
+    const canvas = document.createElement(`canvas`)
+    container.appendChild(canvas)
+    const offscreen = canvas.transferControlToOffscreen()
+    await drawOffscreenCanvas(Comlink.transfer({ data, bitmaps, dw, offscreen }, [...bitmaps, offscreen]))
   }
 
   collectImageData = (imgRef, topPos, selectH, offsetHeight, imageIdx, always = false) => {

@@ -1,14 +1,25 @@
-export const drawOffscreenCanvas = async ({ data, bitmaps }) => {
-  const dw = 300;
-  const canvas = new OffscreenCanvas(dw, 1000);
-  const ctx = canvas.getContext(`2d`)
+export const drawOffscreenCanvas = async ({ data, bitmaps, dw = 300, offscreen }) => {
+  const [vhs, oHeight] = data.reduce(([vhs, oHeight], imgData, idx) => {
+    const bitmap = bitmaps[idx]
+    const sw = bitmap.width
+    const { realSh: sh, } = imgData
+    const vh = sh / sw * dw
+    vhs = vhs.concat(vh)
+    oHeight += (vh + 5)
+    return [vhs, oHeight]
+  }, [[], 0])
+
+  offscreen.width = dw
+  offscreen.height = oHeight
+
+  const ctx = offscreen.getContext(`2d`)
 
   data.reduce((dy, imgData, idx) => {
     const bitmap = bitmaps[idx]
+    const vh = vhs[idx]
     const sw = bitmap.width
 
     const { realSy: sy, realSh: sh, } = imgData
-    const vh = sh / sw * dw
 
     ctx.drawImage(
       bitmap,
@@ -18,9 +29,6 @@ export const drawOffscreenCanvas = async ({ data, bitmaps }) => {
 
     return dy + vh + 5
   }, 0)
-
-  const d = canvas.transferToImageBitmap()
-  return d
 }
 
 export const downloadImage = async ({ data, bitmaps }) => {
