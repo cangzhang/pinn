@@ -2974,10 +2974,10 @@ builtin-status-codes@^3.0.0:
   resolved "https://registry.npm.taobao.org/builtin-status-codes/download/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
   integrity sha1-hZgoeOIbmOHGZCXgPQF0eI9Wnug=
 
-bulma@^0.7.2:
-  version "0.7.5"
-  resolved "https://registry.npm.taobao.org/bulma/download/bulma-0.7.5.tgz#35066c37f82c088b68f94450be758fc00a967208"
-  integrity sha1-NQZsN/gsCIto+URQvnWPwAqWcgg=
+bulma@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.npm.taobao.org/bulma/download/bulma-0.8.0.tgz#ac1606431703a4761b18a4a2d5cc1fa864a2aece"
+  integrity sha1-rBYGQxcDpHYbGKSi1cwfqGSirs4=
 
 bytes@3.0.0:
   version "3.0.0"
@@ -5800,11 +5800,6 @@ invert-kv@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/invert-kv/download/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha1-c5P1r6Weyf9fZ6J2INEcIm4+7AI=
-
-ionicons@^4.5.0:
-  version "4.6.3"
-  resolved "https://registry.npm.taobao.org/ionicons/download/ionicons-4.6.3.tgz#e4f3a3e9b66761eb8c0db27798cc1a8ce97777d2"
-  integrity sha1-5POj6bZnYeuMDbJ3mMwajOl3d9I=
 
 ip-regex@^2.1.0:
   version "2.1.0"
@@ -9245,6 +9240,13 @@ react-error-overlay@^6.0.4:
   version "6.0.4"
   resolved "https://registry.npm.taobao.org/react-error-overlay/download/react-error-overlay-6.0.4.tgz?cache=0&sync_timestamp=1575505376321&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-error-overlay%2Fdownload%2Freact-error-overlay-6.0.4.tgz#0d165d6d27488e660bc08e57bdabaad741366f7a"
   integrity sha1-DRZdbSdIjmYLwI5Xvauq10E2b3o=
+
+react-feather@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npm.taobao.org/react-feather/download/react-feather-2.0.3.tgz#1453ff5d8c242f72b8c02846118fbd2d406375ad"
+  integrity sha1-FFP/XYwkL3K4wChGEY+9LUBjda0=
+  dependencies:
+    prop-types "^15.7.2"
 
 react-is@^16.8.1, react-is@^16.8.4:
   version "16.12.0"

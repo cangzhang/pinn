@@ -1,9 +1,10 @@
 import s from './image-input.module.scss'
 
 import React from 'react'
+import { Upload } from 'react-feather'
 
 export default class ImageInput extends React.Component {
-  inputRef = null
+  inputRef = React.createRef()
 
   state = {
     files: [],
@@ -23,31 +24,20 @@ export default class ImageInput extends React.Component {
     this.props.onFilesReady(res)
   }
 
-  createInputRef = e => this.inputRef = e
-
   render() {
     return (
       <div className={s.imageInput}>
-        <div className='file is-boxed'>
-          <label className='file-label'>
-            <input
-              type='file'
-              accept='image/*'
-              multiple='multiple'
-              className='file-input'
-              ref={this.createInputRef}
-              onChange={this.handleImageChosen}
-            />
-            <span className='file-cta'>
-              <span className='file-icon'>
-                <i className='ion ion-md-cloud-upload'/>
-              </span>
-              <span className='file-label'>
-                Add picture(s)
-              </span>
-            </span>
-          </label>
-        </div>
+        <input
+          type='file'
+          accept='image/*'
+          multiple='multiple'
+          id={`file-input`}
+          className={s.fileInput}
+          ref={this.inputRef}
+          onChange={this.handleImageChosen}
+        />
+        <Upload color={`#18BA88`} size={`2.6rem`}/>
+        <label htmlFor="file-input">Choose file(s)</label>
       </div>
     )
   }

@@ -1,7 +1,24 @@
 .image-input {
   display: flex;
   justify-content: center;
-  margin: 1ex;
+  align-items: center;
+  width: 20rem;
+  margin: 2rem auto;
+  height: 4rem;
+  border: 1px solid #272a2f;
+  border-radius: 1rem;
+
+  *:hover {
+    cursor: pointer;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  label {
+    margin-left: 1rem;
+  }
 }
 
 .trigger {

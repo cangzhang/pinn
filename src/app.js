@@ -1,11 +1,11 @@
 import s from './app.module.scss';
-import DownloadIcon from 'ionicons/dist/ionicons/svg/ios-cloud-download.svg'
 
 import * as Comlink from 'comlink';
 import { saveAs } from 'file-saver'
 
 import React, { Component } from 'react'
 import cn from 'classnames'
+import { DownloadCloud } from 'react-feather'
 
 import { drawImageByBlock } from 'src/utils/image.helper'
 import { removeChildren } from 'src/utils/dom.helper'
@@ -142,7 +142,7 @@ class App extends Component {
         <div className={s.btnGroup}>
           <a
             href='#pinn-btn'
-            className='button is-dark'
+            className={cn('button is-link is-light', s.pinnBtn)}
             onClick={this.generateImg}
           >
             Pinn!
@@ -160,12 +160,13 @@ class App extends Component {
           <div id={'final-preview'} className={s.finalPreview}>
             {
               canDownload &&
-              <img
-                alt="download"
-                src={DownloadIcon}
-                className={cn(s.download)}
-                onClick={this.download}
-              />
+                <div className={s.download}>
+                  <DownloadCloud
+                    color={`#fd0f5e`}
+                    size={`5rem`}
+                    onClick={this.download}
+                  />
+                </div>
             }
           </div>
         </div>

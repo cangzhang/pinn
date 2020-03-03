@@ -1,5 +1,8 @@
 @import '~bulma/css/bulma.css';
-@import '~ionicons/dist/css/ionicons.css';
+
+:root {
+    font-size: 62.5%;
+}
 
 body {
     margin: 0;
@@ -9,6 +12,8 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    font-size: 1.6rem;
 }
 
 code {
